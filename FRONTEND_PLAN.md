@@ -1,16 +1,3 @@
-¡Entendido! Me alegra que el plan te parezca excelente. 
-
-Debido a que actualmente me encuentro en **Modo Planificación (Read-Only)** por seguridad, tengo **estrictamente prohibido realizar cualquier escritura o modificación en el disco** (lo que incluye crear físicamente el archivo en el repositorio en este momento). Sin embargo, he preparado el documento completo y definitivo en formato Markdown para que lo revisemos.
-
-Tan pronto como decidas darme luz verde para pasar al **Modo Ejecución**, lo primero que haré será guardar este archivo como `FRONTEND_PLAN.md` en la raíz de tu proyecto e iniciar con el andamiaje del código.
-
-Aquí tienes el contenido exacto del documento consolidado:
-
----
-
-# 📄 Archivo Propuesto: `FRONTEND_PLAN.md`
-
-```markdown
 # Plan de Desarrollo Frontend - Restaurante Enterprise
 
 Este documento consolida la arquitectura, el stack de librerías, los estándares y el plan de fases para la construcción del frontend del sistema de restaurante, asegurando un tipado estático estricto **End-to-End** y una integración perfecta con la API en .NET 10.
@@ -105,22 +92,9 @@ src/
 
 ---
 
-## 📏 4. Borrador de Estándares (`CONVENTIONS.md`)
+## 📏 4. Estándares de Código (`CONVENTIONS.md`)
 
-```markdown
-# Estándares de Código - Frontend
-
-## Nomenclatura
-- **Carpetas de módulos/capas:** `kebab-case` (ej: `waiting-list`, `shared-components`).
-- **Componentes React:** `PascalCase` con extensión `.tsx` (ej: `ReservationForm.tsx`).
-- **Hooks personalizados:** `camelCase` con prefijo `use` (ej: `useReservations.ts`).
-- **Archivos de lógica, helpers o tipos:** `camelCase` con extensión `.ts` (ej: `dateFormatter.ts`).
-
-## Reglas de TypeScript
-- **Prohibido el tipo `any`:** Todo debe tiparse de forma estricta.
-- **DTOs compartidos:** Las interfaces de TypeScript en `types/` deben mapear de manera idéntica los DTOs de C#.
-- **Esquemas Zod:** Cada DTO de entrada debe tener un esquema de validación Zod homónimo para asegurar la integridad de datos en formularios.
-```
+Ver archivo adjunto `CONVENTIONS.md` para detalles completos.
 
 ---
 
@@ -172,16 +146,12 @@ export interface ReservationResponse {
 
 ## 🗓️ 7. Fases de Ejecución
 
-1. **Fase 1: Inicialización y Gobernanza** -> Crear el andamiaje del proyecto Vite en `/frontend`, instalar dependencias y crear los archivos `CONVENTIONS.md` y `FRONTEND_PLAN.md`.
-2. **Fase 2: Base e Infraestructura de Datos** -> Configurar Axios con interceptores JWT, enrutamiento básico en TanStack Router, estado con Zustand y el Layout base (Navbar/Sidebar).
-3. **Fase 3: Implementación de Slices** -> Construir progresivamente `clients`, `infrastructure` y `reservations` con sus respectivas carpetas internas (`ui`, `api`, `hooks`, `types`, `services`).
-4. **Fase 4: Lista de Espera e Integraciones** -> Desarrollar el módulo `waiting-list` y acoplar el flujo de asignación automática de mesas.
-5. **Fase 5: Verificación, Compilación y QA** -> Validar la compilación estricta de TypeScript y documentar instrucciones de levantamiento local.
-```
+1. **Fase 1: Inicialización y Gobernanza** → Crear el andamiaje del proyecto Vite en `/frontend`, instalar dependencias y crear los archivos `CONVENTIONS.md` y `FRONTEND_PLAN.md`.
+2. **Fase 2: Base e Infraestructura de Datos** → Configurar Axios con interceptores JWT, enrutamiento básico en TanStack Router, estado con Zustand y el Layout base (Navbar/Sidebar).
+3. **Fase 3: Implementación de Slices** → Construir progresivamente `clients`, `infrastructure` y `reservations` con sus respectivas carpetas internas (`ui`, `api`, `hooks`, `types`, `services`).
+4. **Fase 4: Lista de Espera e Integraciones** → Desarrollar el módulo `waiting-list` y acoplar el flujo de asignación automática de mesas.
+5. **Fase 5: Verificación, Compilación y QA** → Validar la compilación estricta de TypeScript y documentar instrucciones de levantamiento local.
 
 ---
 
-### ¿Cómo proceder?
-¿Consideras oportuno que agreguemos o afinemos algún detalle de este flujo (por ejemplo, el diseño estético de la UI en Tailwind, o especificaciones del token de refresco de seguridad)? 
-
-Si todo está a tu entera conformidad, **por favor confírmame si deseas que pasemos de Modo Planificación a Modo Ejecución** para que pueda comenzar a crear los archivos físicos y realizar el andamiaje del proyecto frontend.
+**Estado:** ✅ Fase 1 completada el 4 de Junio de 2026.
