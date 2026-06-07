@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
@@ -15,16 +14,6 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-
-    /* Path aliases */
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@/features/*": ["src/features/*"],
-      "@/shared/*": ["src/shared/*"],
-      "@/config/*": ["src/config/*"],
-      "@/app/*": ["src/app/*"]
-    },
 
     /* Linting */
     "noUnusedLocals": true,
