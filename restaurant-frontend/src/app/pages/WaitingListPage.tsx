@@ -1,12 +1,24 @@
-import { ModulePlaceholder } from '../../shared/components/ModulePlaceholder'
+import { useState } from 'react'
+import { LiveWaitingQueue } from '../../features/waiting-list/ui/LiveWaitingQueue'
+import { AddToQueueModal } from '../../features/waiting-list/ui/AddToQueueModal'
 
 export function WaitingListPage() {
+  const [showAddModal, setShowAddModal] = useState(false)
+
   return (
-    <ModulePlaceholder
-      description="Cola de walk-ins y asignacion rapida cuando una mesa queda libre."
-      eyebrow="Espera"
-      primaryAction="Agregar grupo"
-      title="Lista de espera"
-    />
+    <>
+      <header className="page-header">
+        <div>
+          <p className="eyebrow">Espera</p>
+          <h1>Lista de espera</h1>
+        </div>
+      </header>
+
+      <LiveWaitingQueue onOpenAddModal={() => setShowAddModal(true)} />
+
+      {showAddModal && (
+        <AddToQueueModal onClose={() => setShowAddModal(false)} />
+      )}
+    </>
   )
 }

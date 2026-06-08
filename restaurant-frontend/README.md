@@ -1,73 +1,73 @@
-# React + TypeScript + Vite
+# Restaurante Enterprise — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema de gestión de operaciones para restaurante. Panel operativo para administrar comensales, infraestructura del salón, reservaciones y lista de espera.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Capa | Librería |
+|---|---|
+| Core | React 19 + TypeScript + Vite |
+| Enrutamiento | @tanstack/react-router |
+| Formularios | @tanstack/react-form |
+| Data Fetching | @tanstack/react-query |
+| Estado global | Zustand |
+| Cliente HTTP | Axios |
+| Validación | Zod |
+| Estilos | Tailwind CSS (utilidades) + CSS nativo |
 
-## React Compiler
+## Arquitectura
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── app/           # Configuración global, rutas, páginas
+├── features/      # Vertical Slices (auth, clients, infrastructure, reservations, waiting-list)
+│   ├── api/       # Llamadas HTTP
+│   ├── hooks/     # Hooks React (TanStack Query)
+│   ├── services/  # Lógica de negocio
+│   ├── types/     # DTOs y esquemas Zod
+│   └── ui/        # Componentes
+├── shared/        # Componentes, layouts, API client, tipos globales
+└── config/        # Variables de entorno validadas
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Requisitos
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Node.js 20+
+- pnpm (recomendado) o npm
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Instalación
+
+```bash
+pnpm install
 ```
+
+## Configuración
+
+Crear archivo `.env.local` en la raíz:
+
+```env
+VITE_API_BASE_URL=http://localhost:5052
+VITE_API_TIMEOUT=15000
+VITE_APP_ENV=development
+```
+
+## Scripts
+
+| Comando | Descripción |
+|---|---|
+| `pnpm dev` | Inicia servidor de desarrollo (Vite HMR) |
+| `pnpm build` | Compila TypeScript + build de producción |
+| `pnpm preview` | Previsualiza el build de producción |
+| `pnpm lint` | Ejecuta ESLint |
+
+## API
+
+El frontend espera una API REST en .NET 10 con los siguientes endpoints:
+
+| Módulo | Endpoints |
+|---|---|
+| Auth | `/auth/*` |
+| Clients | `GET/POST /clients`, `GET /clients/search`, `PUT /clients/:id` |
+| Infrastructure | `GET /infrastructure/layout`, `GET/POST /infrastructure/tables/*` |
+| Reservations | `GET/POST /reservations`, `PATCH /reservations/:id/status` |
+| Waiting List | `GET/POST /waiting-list`, `PATCH /waiting-list/:id/status`, `POST /waiting-list/:id/assign`, `DELETE /waiting-list/:id` |
