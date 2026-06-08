@@ -20,7 +20,11 @@ export async function logout(): Promise<void> {
   await httpClient.post('/auth/logout')
 }
 
-export async function getMe(): Promise<UserDto> {
-  const { data } = await httpClient.get<UserDto>('/auth/me')
-  return data
+export async function getMe(): Promise<UserDto | null> {
+  try {
+    const { data } = await httpClient.get<UserDto>('/auth/me')
+    return data
+  } catch {
+    return null
+  }
 }
