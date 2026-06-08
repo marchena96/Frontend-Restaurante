@@ -5,16 +5,14 @@ import { ClientSearch } from '../../clients/ui/ClientSearch'
 import { InteractiveFloorPlan } from '../../infrastructure/ui/InteractiveFloorPlan'
 import { useCreateReservationMutation } from '../hooks/useCreateReservationMutation'
 import type { ReservationCreateInput } from '../types/reservation'
-import type { ClientResponse } from '../../clients/types/client'
+import type { Client } from '../../clients/types/client'
 import type { RestaurantTable } from '../../infrastructure/types/table'
 
 type Step = 'client' | 'table' | 'details' | 'confirm'
 
 export function ReservationWizard() {
   const [step, setStep] = useState<Step>('client')
-  const [selectedClient, setSelectedClient] = useState<ClientResponse | null>(
-    null,
-  )
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [selectedTable, setSelectedTable] = useState<RestaurantTable | null>(
     null,
   )
@@ -35,7 +33,7 @@ export function ReservationWizard() {
     },
   })
 
-  const handleSelectClient = (client: ClientResponse) => {
+  const handleSelectClient = (client: Client) => {
     setSelectedClient(client)
     form.setFieldValue('clientId', client.id)
     setStep('table')
@@ -100,7 +98,7 @@ export function ReservationWizard() {
             <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
               Comensal
             </label>
-            <p>{selectedClient?.fullName}</p>
+            <p>{`${selectedClient?.firstName} ${selectedClient?.lastName}`}</p>
           </div>
 
           <div>
@@ -197,7 +195,7 @@ export function ReservationWizard() {
             <strong>Reserva creada exitosamente</strong>
           </p>
           <p style={{ color: 'var(--text-muted)' }}>
-            {selectedClient?.fullName} &middot; Mesa {selectedTable?.tableNumber}{' '}
+            {`${selectedClient?.firstName} ${selectedClient?.lastName}`} &middot; Mesa {selectedTable?.tableNumber}{' '}
             &middot; {form.state.values.date} a las{' '}
             {form.state.values.reservationTime}
           </p>

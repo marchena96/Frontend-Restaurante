@@ -1,4 +1,4 @@
-import type { ClientResponse } from '../types/client'
+import type { Client } from '../types/client'
 
 export function formatClientPhone(phone: string): string {
   const cleaned = phone.replace(/\D/g, '')
@@ -18,14 +18,15 @@ export function getClientInitials(name: string): string {
 }
 
 export function filterClientsByQuery(
-  clients: readonly ClientResponse[],
+  clients: readonly Client[],
   query: string,
-): readonly ClientResponse[] {
+): readonly Client[] {
   const q = query.toLowerCase()
   return clients.filter(
     (c) =>
-      c.fullName.toLowerCase().includes(q) ||
+      c.firstName.toLowerCase().includes(q) ||
+      c.lastName.toLowerCase().includes(q) ||
       c.phoneNumber.includes(q) ||
-      (c.email ?? '').toLowerCase().includes(q),
+      c.idCard.toLowerCase().includes(q),
   )
 }

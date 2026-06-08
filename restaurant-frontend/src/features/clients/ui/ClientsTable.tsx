@@ -1,10 +1,10 @@
-import type { ClientResponse } from '../types/client'
+import type { Client } from '../types/client'
 import type { ReactNode } from 'react'
 
 interface ClientsTableProps {
-  clients: readonly ClientResponse[] | undefined
+  clients: readonly Client[] | undefined
   isLoading: boolean
-  actions?: (client: ClientResponse) => ReactNode
+  actions?: (client: Client) => ReactNode
 }
 
 export function ClientsTable({
@@ -27,9 +27,7 @@ export function ClientsTable({
           <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border)' }}>
             <th style={{ padding: '10px 8px' }}>Nombre</th>
             <th style={{ padding: '10px 8px' }}>Telefono</th>
-            <th style={{ padding: '10px 8px' }}>Email</th>
-            <th style={{ padding: '10px 8px' }}>Visitas</th>
-            <th style={{ padding: '10px 8px' }}>Ultima visita</th>
+            <th style={{ padding: '10px 8px' }}>Cedula</th>
             {actions && <th style={{ padding: '10px 8px' }}>Accion</th>}
           </tr>
         </thead>
@@ -40,18 +38,10 @@ export function ClientsTable({
               style={{ borderBottom: '1px solid var(--border)' }}
             >
               <td style={{ padding: '10px 8px' }}>
-                <strong>{client.fullName}</strong>
+                <strong>{`${client.firstName} ${client.lastName}`}</strong>
               </td>
               <td style={{ padding: '10px 8px' }}>{client.phoneNumber}</td>
-              <td style={{ padding: '10px 8px' }}>
-                {client.email ?? '---'}
-              </td>
-              <td style={{ padding: '10px 8px' }}>{client.visitCount}</td>
-              <td style={{ padding: '10px 8px' }}>
-                {client.lastVisitAt
-                  ? new Date(client.lastVisitAt).toLocaleDateString()
-                  : '---'}
-              </td>
+              <td style={{ padding: '10px 8px' }}>{client.idCard}</td>
               {actions && (
                 <td style={{ padding: '10px 8px' }}>{actions(client)}</td>
               )}
