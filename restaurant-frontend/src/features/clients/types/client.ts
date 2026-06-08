@@ -1,10 +1,7 @@
-import type { EntityId } from '../../../shared/types'
-
-export interface ClientResponse {
-  id: EntityId
-  fullName: string
+export interface Client {
+  id: number
+  firstName: string
+  lastName: string
   phoneNumber: string
-  email?: string
-  visitCount: number
-  lastVisitAt?: string
+  idCard: string
 }
