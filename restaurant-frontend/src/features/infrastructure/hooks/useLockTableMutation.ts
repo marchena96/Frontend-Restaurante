@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { lockTable, unlockTable } from '../api/infrastructureApi'
+import { lockTable, unlockTable, findLockByTableId } from '../api/infrastructureApi'
 
 export function useLockTableMutation() {
   const queryClient = useQueryClient()
@@ -13,7 +13,11 @@ export function useLockTableMutation() {
   })
 
   const unlock = useMutation({
-    mutationFn: (tableId: number) => unlockTable(tableId),
+    mutationFn: async (tableId: number) => {
+      const lock = await findLockByTableId(tableId)
+      if (!lock) throw new Error('No active lock found for this table')
+      await unlockTable(lock.id)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['infrastructure'] })
     },

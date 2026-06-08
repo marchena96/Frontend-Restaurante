@@ -14,14 +14,12 @@ export interface LayoutData {
 }
 
 export async function getLayout(): Promise<LayoutData> {
-  const { data } = await httpClient.get<LayoutData>('/infrastructure/layout')
+  const { data } = await httpClient.get<LayoutData>('/tables/layout')
   return data
 }
 
 export async function getTables(): Promise<readonly RestaurantTable[]> {
-  const { data } = await httpClient.get<readonly RestaurantTable[]>(
-    '/infrastructure/tables',
-  )
+  const { data } = await httpClient.get<readonly RestaurantTable[]>('/tables')
   return data
 }
 
@@ -29,11 +27,30 @@ export async function lockTable(
   tableId: number,
   reason: string,
 ): Promise<void> {
-  await httpClient.post(`/infrastructure/tables/${tableId}/lock`, { reason })
+  const now = new Date()
+  const today = now.toISOString().slice(0, 10)
+  const startTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+  const endHour = now.getHours() + 2
+  const endTime = `${String(endHour).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+
+  await httpClient.post('/tablelocks', {
+    tableId,
+    date: today,
+    startTime,
+    endTime,
+    reason,
+  })
 }
 
-export async function unlockTable(tableId: number): Promise<void> {
-  await httpClient.post(`/infrastructure/tables/${tableId}/unlock`)
+export async function unlockTable(lockId: number): Promise<void> {
+  await httpClient.delete(`/tablelocks/${lockId}`)
+}
+
+export async function findLockByTableId(
+  tableId: number,
+): Promise<{ id: number } | undefined> {
+  const { data } = await httpClient.get<readonly { id: number; tableId: number }[]>('/tablelocks')
+  return data.find((lock) => lock.tableId === tableId)
 }
 
 export async function getAvailableTables(
@@ -42,7 +59,7 @@ export async function getAvailableTables(
   time: string,
 ): Promise<readonly RestaurantTable[]> {
   const { data } = await httpClient.get<readonly RestaurantTable[]>(
-    '/infrastructure/tables/available',
+    '/tables/available',
     { params: { guestCount, date, time } },
   )
   return data

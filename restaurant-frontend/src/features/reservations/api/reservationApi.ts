@@ -5,6 +5,13 @@ import type {
   ReservationStatus,
 } from '../types/reservation'
 
+const statusToId: Record<ReservationStatus, number> = {
+  Pendiente: 2,
+  Confirmada: 1,
+  Completada: 3,
+  Cancelada: 4,
+}
+
 export async function getReservations(): Promise<
   readonly ReservationResponse[]
 > {
@@ -37,7 +44,8 @@ export async function updateReservationStatus(
   id: number,
   status: ReservationStatus,
 ): Promise<void> {
-  await httpClient.patch(`/reservations/${id}/status`, { status })
+  const statusId = statusToId[status]
+  await httpClient.put(`/reservations/${id}/status/${statusId}`)
 }
 
 export async function getReservationsByDate(
