@@ -1,37 +1,42 @@
 import { create } from 'zustand'
-import { createJSONStorage, persist } from 'zustand/middleware'
-import type { AuthSession, AuthUser } from '../types/auth'
+import type { AuthUser } from '../types/auth'
+import * as authApi from '../api/authApi'
 
 interface AuthSessionState {
-  accessToken: string | null
-  isAuthenticated: boolean
   user: AuthUser | null
+  isAuthenticated: boolean
+  isInitialized: boolean
+  login: (credentials: authApi.LoginRequestDto) => Promise<void>
+  logout: () => Promise<void>
+  initialize: () => Promise<void>
+  setUser: (user: AuthUser) => void
   clearSession: () => void
-  setSession: (session: AuthSession) => void
 }
 
-export const useAuthSessionStore = create<AuthSessionState>()(
-  persist(
-    (set) => ({
-      accessToken: null,
-      isAuthenticated: false,
-      user: null,
-      clearSession: () =>
-        set({
-          accessToken: null,
-          isAuthenticated: false,
-          user: null,
-        }),
-      setSession: (session) =>
-        set({
-          accessToken: session.accessToken,
-          isAuthenticated: true,
-          user: session.user,
-        }),
-    }),
-    {
-      name: 'restaurant.auth.session',
-      storage: createJSONStorage(() => window.localStorage),
-    },
-  ),
-)
+export const useAuthSessionStore = create<AuthSessionState>()((set) => ({
+  user: null,
+  isAuthenticated: false,
+  isInitialized: false,
+
+  login: async (credentials) => {
+    const user = await authApi.login(credentials)
+    set({ user, isAuthenticated: true })
+  },
+
+  logout: async () => {
+    await authApi.logout()
+    set({ user: null, isAuthenticated: false })
+  },
+
+  initialize: async () => {
+    try {
+      const user = await authApi.getMe()
+      set({ user, isAuthenticated: true, isInitialized: true })
+    } catch {
+      set({ user: null, isAuthenticated: false, isInitialized: true })
+    }
+  },
+
+  setUser: (user) => set({ user, isAuthenticated: true }),
+  clearSession: () => set({ user: null, isAuthenticated: false }),
+}))

@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { Button } from '../../../shared/components/Button'
+import { ClientSearch } from '../../clients/ui/ClientSearch'
 import { useAddToQueueMutation } from '../hooks/useAddToQueueMutation'
 import type { AddToQueuePayload } from '../api/waitingListApi'
+import type { Client } from '../../clients/types/client'
 
 interface AddToQueueModalProps {
   onClose: () => void
@@ -9,20 +12,25 @@ interface AddToQueueModalProps {
 
 export function AddToQueueModal({ onClose }: AddToQueueModalProps) {
   const addMutation = useAddToQueueMutation()
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null)
 
-  const form = useForm<AddToQueuePayload>({
+  const form = useForm<{ partySize: number }>({
     defaultValues: {
-      clientName: '',
       partySize: 2,
-      phoneNumber: '',
-      preferredZone: '',
     },
     onSubmit: async ({ value }) => {
+      if (!selectedClient) return
+      const now = new Date()
+      const today = now.toISOString().slice(0, 10)
+      const startTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+      const endHour = now.getHours() + 2
+      const endTime = `${String(endHour).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
       const payload: AddToQueuePayload = {
-        clientName: value.clientName,
+        clientId: selectedClient.id,
         partySize: value.partySize,
-        phoneNumber: value.phoneNumber || undefined,
-        preferredZone: value.preferredZone || undefined,
+        date: today,
+        startTime,
+        endTime,
       }
       await addMutation.mutateAsync(payload)
       onClose()
@@ -59,23 +67,42 @@ export function AddToQueueModal({ onClose }: AddToQueueModalProps) {
           }}
           style={{ display: 'grid', gap: 16 }}
         >
-          <form.Field name="clientName">
-            {(field) => (
-              <div>
-                <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-                  Nombre del cliente
-                </label>
-                <input
-                  className="button button--secondary"
-                  style={{ width: '100%' }}
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Ej: Carlos M."
-                  required
-                />
+          <div>
+            <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
+              Cliente
+            </label>
+            {selectedClient ? (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '8px 12px',
+                  background: 'var(--panel-muted)',
+                  borderRadius: 8,
+                }}
+              >
+                <span>
+                  <strong>{`${selectedClient.firstName} ${selectedClient.lastName}`}</strong>
+                  <small style={{ display: 'block', color: 'var(--text-muted)' }}>
+                    {selectedClient.phoneNumber}
+                  </small>
+                </span>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setSelectedClient(null)}
+                >
+                  Cambiar
+                </Button>
               </div>
+            ) : (
+              <ClientSearch
+                onSelect={(client: Client) => setSelectedClient(client)}
+                placeholder="Buscar cliente por nombre..."
+              />
             )}
-          </form.Field>
+          </div>
 
           <form.Field name="partySize">
             {(field) => (
@@ -99,46 +126,11 @@ export function AddToQueueModal({ onClose }: AddToQueueModalProps) {
             )}
           </form.Field>
 
-          <form.Field name="phoneNumber">
-            {(field) => (
-              <div>
-                <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-                  Telefono (opcional)
-                </label>
-                <input
-                  className="button button--secondary"
-                  style={{ width: '100%' }}
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Ej: 8888-5555"
-                />
-              </div>
-            )}
-          </form.Field>
-
-          <form.Field name="preferredZone">
-            {(field) => (
-              <div>
-                <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-                  Zona preferida (opcional)
-                </label>
-                <select
-                  className="button button--secondary"
-                  style={{ width: '100%' }}
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                >
-                  <option value="">Sin preferencia</option>
-                  <option value="Terraza">Terraza</option>
-                  <option value="Principal">Principal</option>
-                  <option value="Privado">Privado</option>
-                </select>
-              </div>
-            )}
-          </form.Field>
-
           <div className="header-actions">
-            <Button type="submit" disabled={addMutation.isPending}>
+            <Button
+              type="submit"
+              disabled={addMutation.isPending || !selectedClient}
+            >
               {addMutation.isPending ? 'Agregando...' : 'Agregar a la cola'}
             </Button>
             <Button type="button" variant="secondary" onClick={onClose}>
