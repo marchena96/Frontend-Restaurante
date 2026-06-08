@@ -1,19 +1,20 @@
 import { useForm } from '@tanstack/react-form'
 import { z } from 'zod'
 import { Button } from '../../../shared/components/Button'
-import type { CreateClientPayload } from '../api/clientApi'
+import type { Client } from '../types/client'
 
 const clientFormSchema = z.object({
-  fullName: z.string().min(1, 'El nombre es obligatorio'),
+  firstName: z.string().min(1, 'El nombre es obligatorio'),
+  lastName: z.string().min(1, 'El apellido es obligatorio'),
   phoneNumber: z.string().min(8, 'Telefono invalido'),
-  email: z.string().email('Email invalido').optional().or(z.literal('')),
+  idCard: z.string().min(1, 'La cedula es obligatoria'),
 })
 
 type ClientFormValues = z.infer<typeof clientFormSchema>
 
 interface ClientRegisterFormProps {
   initialValues?: Partial<ClientFormValues>
-  onSubmit: (values: CreateClientPayload) => void
+  onSubmit: (values: Omit<Client, 'id'>) => void
   onCancel?: () => void
   isSubmitting?: boolean
 }
@@ -26,16 +27,18 @@ export function ClientRegisterForm({
 }: ClientRegisterFormProps) {
   const form = useForm<ClientFormValues>({
     defaultValues: {
-      fullName: initialValues?.fullName ?? '',
+      firstName: initialValues?.firstName ?? '',
+      lastName: initialValues?.lastName ?? '',
       phoneNumber: initialValues?.phoneNumber ?? '',
-      email: initialValues?.email ?? '',
+      idCard: initialValues?.idCard ?? '',
     },
     onSubmit: async ({ value }) => {
       const parsed = clientFormSchema.parse(value)
       onSubmit({
-        fullName: parsed.fullName,
+        firstName: parsed.firstName,
+        lastName: parsed.lastName,
         phoneNumber: parsed.phoneNumber,
-        email: parsed.email || undefined,
+        idCard: parsed.idCard,
       })
     },
   })
@@ -49,18 +52,40 @@ export function ClientRegisterForm({
       }}
       style={{ display: 'grid', gap: '16px', maxWidth: 400 }}
     >
-      <form.Field name="fullName">
+      <form.Field name="firstName">
         {(field) => (
           <div>
             <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-              Nombre completo
+              Nombre
             </label>
             <input
               className="button button--secondary"
               style={{ width: '100%' }}
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
-              placeholder="Ej: Juan Perez"
+              placeholder="Ej: Juan"
+            />
+            {field.state.meta.errors?.length > 0 && (
+              <small style={{ color: 'var(--warning)' }}>
+                {field.state.meta.errors.join(', ')}
+              </small>
+            )}
+          </div>
+        )}
+      </form.Field>
+
+      <form.Field name="lastName">
+        {(field) => (
+          <div>
+            <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
+              Apellido
+            </label>
+            <input
+              className="button button--secondary"
+              style={{ width: '100%' }}
+              value={field.state.value}
+              onChange={(e) => field.handleChange(e.target.value)}
+              placeholder="Ej: Perez"
             />
             {field.state.meta.errors?.length > 0 && (
               <small style={{ color: 'var(--warning)' }}>
@@ -93,19 +118,18 @@ export function ClientRegisterForm({
         )}
       </form.Field>
 
-      <form.Field name="email">
+      <form.Field name="idCard">
         {(field) => (
           <div>
             <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-              Email (opcional)
+              Cedula
             </label>
             <input
               className="button button--secondary"
               style={{ width: '100%' }}
-              type="email"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
-              placeholder="Ej: juan@ejemplo.com"
+              placeholder="Ej: 504580546"
             />
             {field.state.meta.errors?.length > 0 && (
               <small style={{ color: 'var(--warning)' }}>

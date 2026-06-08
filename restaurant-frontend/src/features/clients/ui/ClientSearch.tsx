@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react'
 import { useClientSearchQuery } from '../hooks/useClientSearchQuery'
-import type { ClientResponse } from '../types/client'
+import type { Client } from '../types/client'
 
 interface ClientSearchProps {
-  onSelect: (client: ClientResponse) => void
+  onSelect: (client: Client) => void
   placeholder?: string
 }
 
@@ -12,7 +12,7 @@ export function ClientSearch({ onSelect, placeholder }: ClientSearchProps) {
   const { data: results, isLoading } = useClientSearchQuery(query)
 
   const handleSelect = useCallback(
-    (client: ClientResponse) => {
+    (client: Client) => {
       onSelect(client)
       setQuery('')
     },
@@ -68,7 +68,7 @@ export function ClientSearch({ onSelect, placeholder }: ClientSearchProps) {
                 cursor: 'pointer',
               }}
             >
-              <strong>{client.fullName}</strong>
+              <strong>{`${client.firstName} ${client.lastName}`}</strong>
               <small style={{ display: 'block', color: 'var(--text-muted)' }}>
                 {client.phoneNumber}
               </small>
