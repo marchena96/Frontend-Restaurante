@@ -1,15 +1,16 @@
-import { createRouter, redirect } from '@tanstack/react-router'
+import { createRouter, redirect, Route } from '@tanstack/react-router'
 import { rootRoute } from './routes/__root'
 import { AdminLayout } from './pages/AdminLayout'
 import { ClientsPage } from './pages/ClientsPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { InfrastructurePage } from './pages/InfrastructurePage'
 import { LoginPage } from './pages/LoginPage'
+import { NotFoundPage } from './pages/NotFoundPage'
 import { ReservationsPage } from './pages/ReservationsPage'
 import { WaitingListPage } from './pages/WaitingListPage'
 import { useAuthSessionStore } from '../features/auth/store/authSessionStore'
 
-const indexRoute = createRoute({
+const indexRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/',
   beforeLoad: () => {
@@ -19,13 +20,13 @@ const indexRoute = createRoute({
   },
 })
 
-const loginRoute = createRoute({
+const loginRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/login',
   component: LoginPage,
 })
 
-const adminRoute = createRoute({
+const adminRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/admin',
   beforeLoad: () => {
@@ -35,31 +36,31 @@ const adminRoute = createRoute({
   component: AdminLayout,
 })
 
-const adminDashboardRoute = createRoute({
+const adminDashboardRoute = new Route({
   getParentRoute: () => adminRoute,
   path: '/',
   component: DashboardPage,
 })
 
-const adminClientsRoute = createRoute({
+const adminClientsRoute = new Route({
   getParentRoute: () => adminRoute,
   path: '/clients',
   component: ClientsPage,
 })
 
-const adminInfrastructureRoute = createRoute({
+const adminInfrastructureRoute = new Route({
   getParentRoute: () => adminRoute,
   path: '/infrastructure',
   component: InfrastructurePage,
 })
 
-const adminReservationsRoute = createRoute({
+const adminReservationsRoute = new Route({
   getParentRoute: () => adminRoute,
   path: '/reservations',
   component: ReservationsPage,
 })
 
-const adminWaitingListRoute = createRoute({
+const adminWaitingListRoute = new Route({
   getParentRoute: () => adminRoute,
   path: '/waiting-list',
   component: WaitingListPage,
@@ -79,6 +80,7 @@ const routeTree = rootRoute.addChildren([
 
 export const router = createRouter({
   routeTree,
+  defaultNotFoundComponent: NotFoundPage,
 })
 
 declare module '@tanstack/react-router' {
