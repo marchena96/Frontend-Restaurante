@@ -8,10 +8,20 @@ import './App.css'
 
 function App() {
   const initialize = useAuthSessionStore((s) => s.initialize)
+  const isLoading = useAuthSessionStore((s) => s.isLoading)
 
   useEffect(() => {
     initialize()
   }, [initialize])
+
+  if (isLoading) {
+    return (
+      <div className="app-loading">
+        <div className="spinner" />
+        <p>Cargando...</p>
+      </div>
+    )
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -5,6 +5,7 @@ import * as authApi from '../api/authApi'
 interface AuthSessionState {
   user: AuthUser | null
   isAuthenticated: boolean
+  isLoading: boolean
   isInitialized: boolean
   login: (credentials: authApi.LoginRequestDto) => Promise<void>
   logout: () => Promise<void>
@@ -16,6 +17,7 @@ interface AuthSessionState {
 export const useAuthSessionStore = create<AuthSessionState>()((set) => ({
   user: null,
   isAuthenticated: false,
+  isLoading: true,
   isInitialized: false,
 
   login: async (credentials) => {
@@ -29,11 +31,12 @@ export const useAuthSessionStore = create<AuthSessionState>()((set) => ({
   },
 
   initialize: async () => {
-    try {
-      const user = await authApi.getMe()
-      set({ user, isAuthenticated: true, isInitialized: true })
-    } catch {
-      set({ user: null, isAuthenticated: false, isInitialized: true })
+    set({ isLoading: true })
+    const user = await authApi.getMe()
+    if (user) {
+      set({ user, isAuthenticated: true, isLoading: false, isInitialized: true })
+    } else {
+      set({ user: null, isAuthenticated: false, isLoading: false, isInitialized: true })
     }
   },
 

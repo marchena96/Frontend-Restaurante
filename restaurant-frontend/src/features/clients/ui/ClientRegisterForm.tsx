@@ -50,23 +50,21 @@ export function ClientRegisterForm({
         e.stopPropagation()
         form.handleSubmit()
       }}
-      style={{ display: 'grid', gap: '16px', maxWidth: 400 }}
+      className="grid"
+      style={{ maxWidth: 400 }}
     >
       <form.Field name="firstName">
         {(field) => (
           <div>
-            <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-              Nombre
-            </label>
+            <label className="field-label">Nombre</label>
             <input
-              className="button button--secondary"
-              style={{ width: '100%' }}
+              className="button button--secondary w-full"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="Ej: Juan"
             />
             {field.state.meta.errors?.length > 0 && (
-              <small style={{ color: 'var(--warning)' }}>
+              <small className="text-warning">
                 {field.state.meta.errors.join(', ')}
               </small>
             )}
@@ -77,18 +75,15 @@ export function ClientRegisterForm({
       <form.Field name="lastName">
         {(field) => (
           <div>
-            <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-              Apellido
-            </label>
+            <label className="field-label">Apellido</label>
             <input
-              className="button button--secondary"
-              style={{ width: '100%' }}
+              className="button button--secondary w-full"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="Ej: Perez"
             />
             {field.state.meta.errors?.length > 0 && (
-              <small style={{ color: 'var(--warning)' }}>
+              <small className="text-warning">
                 {field.state.meta.errors.join(', ')}
               </small>
             )}
@@ -99,18 +94,15 @@ export function ClientRegisterForm({
       <form.Field name="phoneNumber">
         {(field) => (
           <div>
-            <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-              Telefono
-            </label>
+            <label className="field-label">Telefono</label>
             <input
-              className="button button--secondary"
-              style={{ width: '100%' }}
+              className="button button--secondary w-full"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="Ej: 8888-5555"
             />
             {field.state.meta.errors?.length > 0 && (
-              <small style={{ color: 'var(--warning)' }}>
+              <small className="text-warning">
                 {field.state.meta.errors.join(', ')}
               </small>
             )}
@@ -121,18 +113,15 @@ export function ClientRegisterForm({
       <form.Field name="idCard">
         {(field) => (
           <div>
-            <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-              Cedula
-            </label>
+            <label className="field-label">Cedula</label>
             <input
-              className="button button--secondary"
-              style={{ width: '100%' }}
+              className="button button--secondary w-full"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="Ej: 504580546"
             />
             {field.state.meta.errors?.length > 0 && (
-              <small style={{ color: 'var(--warning)' }}>
+              <small className="text-warning">
                 {field.state.meta.errors.join(', ')}
               </small>
             )}

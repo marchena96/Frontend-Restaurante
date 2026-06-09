@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { useReservationsQuery } from '../../features/reservations/hooks/useReservationsQuery'
 import { ReservationWizard } from '../../features/reservations/ui/ReservationWizard'
 import { TimelineView } from '../../features/reservations/ui/TimelineView'
 import { HistoryLog } from '../../features/reservations/ui/HistoryLog'
+import { ClientSearch } from '../../features/clients/ui/ClientSearch'
+import { InteractiveFloorPlan } from '../../features/infrastructure/ui/InteractiveFloorPlan'
 import { Button } from '../../shared/components/Button'
-import { useState } from 'react'
 
 export function ReservationsPage() {
   const [showWizard, setShowWizard] = useState(false)
@@ -30,7 +32,12 @@ export function ReservationsPage() {
         </div>
       </header>
 
-      {showWizard && <ReservationWizard />}
+      {showWizard && (
+        <ReservationWizard
+          renderClientSearch={(props) => <ClientSearch {...props} />}
+          renderFloorPlan={(props) => <InteractiveFloorPlan {...props} />}
+        />
+      )}
 
       {showHistory ? (
         <HistoryLog reservations={reservations} isLoading={isLoading} />

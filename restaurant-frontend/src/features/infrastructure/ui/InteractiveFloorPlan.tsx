@@ -47,7 +47,7 @@ export function InteractiveFloorPlan({
         selectedZone={selectedZone}
         onSelect={setSelectedZone}
       />
-      <div style={{ display: 'grid', gap: 24, marginTop: 20 }}>
+      <div className="grid" style={{ gap: 24, marginTop: 20 }}>
         {grouped &&
           Object.entries(grouped).map(([zone, tables]) => (
             <div key={zone}>

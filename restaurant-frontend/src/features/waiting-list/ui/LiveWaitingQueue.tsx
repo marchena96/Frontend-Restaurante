@@ -65,7 +65,7 @@ export function LiveWaitingQueue({ onOpenAddModal }: LiveWaitingQueueProps) {
         )}
 
         {sorted.length > 0 && (
-          <div style={{ display: 'grid', gap: 8 }}>
+          <div className="grid-sm">
             {sorted.map((entry, index) => {
               const waitMinutes = getWaitingTimeMinutes(entry)
               const isUrgent = waitMinutes >= 20
@@ -73,24 +73,18 @@ export function LiveWaitingQueue({ onOpenAddModal }: LiveWaitingQueueProps) {
               return (
                 <div
                   key={entry.id}
-                  style={{
-                    alignItems: 'center',
-                    background: isUrgent
-                      ? 'rgba(183, 121, 31, 0.06)'
-                      : 'var(--panel-muted)',
-                    borderRadius: 8,
-                    display: 'grid',
-                    gap: 12,
-                    gridTemplateColumns: '40px 1fr auto auto',
-                    padding: 12,
-                  }}
+                  className={
+                    isUrgent
+                      ? 'queue-entry-card queue-entry-card--urgent'
+                      : 'queue-entry-card'
+                  }
                 >
-                  <strong style={{ color: 'var(--text-muted)' }}>
+                  <strong className="text-muted">
                     #{index + 1}
                   </strong>
                   <div>
                     <strong>{entry.clientName}</strong>
-                    <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: 13 }}>
+                    <span className="text-muted block fs-13">
                       {entry.partySize} pax
                       {entry.preferredZone ? ` · ${entry.preferredZone}` : ''}
                     </span>
@@ -135,23 +129,15 @@ export function LiveWaitingQueue({ onOpenAddModal }: LiveWaitingQueueProps) {
               <h2>Asignaciones recientes</h2>
             </div>
           </div>
-          <div style={{ display: 'grid', gap: 8 }}>
+          <div className="grid-sm">
             {removed.slice(0, 5).map((entry) => (
               <div
                 key={entry.id}
-                style={{
-                  alignItems: 'center',
-                  background: 'var(--panel-muted)',
-                  borderRadius: 8,
-                  display: 'grid',
-                  gap: 12,
-                  gridTemplateColumns: '1fr auto',
-                  padding: 12,
-                }}
+                className="history-entry-card"
               >
                 <div>
                   <strong>{entry.clientName}</strong>
-                  <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: 13 }}>
+                  <span className="text-muted block fs-13">
                     {entry.partySize} pax ·{' '}
                     <span
                       style={{
@@ -165,7 +151,7 @@ export function LiveWaitingQueue({ onOpenAddModal }: LiveWaitingQueueProps) {
                     </span>
                   </span>
                 </div>
-                <small style={{ color: 'var(--text-muted)' }}>
+                <small className="text-muted">
                   {formatWaitingTime(getWaitingTimeMinutes(entry))}
                 </small>
               </div>

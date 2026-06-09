@@ -20,37 +20,28 @@ export function HistoryLog({ reservations, isLoading }: HistoryLogProps) {
   )
 
   return (
-    <div className="operations-panel" style={{ overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <div className="operations-panel overflow-x-auto">
+      <table className="table-data">
         <thead>
-          <tr
-            style={{
-              textAlign: 'left',
-              borderBottom: '1px solid var(--border)',
-            }}
-          >
-            <th style={{ padding: '10px 8px' }}>Fecha</th>
-            <th style={{ padding: '10px 8px' }}>Cliente</th>
-            <th style={{ padding: '10px 8px' }}>Mesa</th>
-            <th style={{ padding: '10px 8px' }}>Invitados</th>
-            <th style={{ padding: '10px 8px' }}>Estado</th>
-            <th style={{ padding: '10px 8px' }}>Creada</th>
+          <tr>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Mesa</th>
+            <th>Invitados</th>
+            <th>Estado</th>
+            <th>Creada</th>
           </tr>
         </thead>
         <tbody>
           {sorted.map((r) => (
-            <tr
-              key={r.id}
-              style={{ borderBottom: '1px solid var(--border)' }}
-            >
-              <td style={{ padding: '10px 8px' }}>{r.date}</td>
-              <td style={{ padding: '10px 8px' }}>{r.clientName}</td>
-              <td style={{ padding: '10px 8px' }}>
-                {r.tableNumber} ({r.zoneName})
-              </td>
-              <td style={{ padding: '10px 8px' }}>{r.guestCount}</td>
-              <td style={{ padding: '10px 8px' }}>
+            <tr key={r.id}>
+              <td>{r.date}</td>
+              <td>{r.clientName}</td>
+              <td>{r.tableNumber} ({r.zoneName})</td>
+              <td>{r.guestCount}</td>
+              <td>
                 <span
+                  className="status-badge"
                   style={{
                     background:
                       r.status === 'Completada'
@@ -60,18 +51,12 @@ export function HistoryLog({ reservations, isLoading }: HistoryLogProps) {
                           : r.status === 'Confirmada'
                             ? '#3b82f6'
                             : 'var(--warning)',
-                    borderRadius: 999,
-                    color: '#fff',
-                    fontSize: 11,
-                    padding: '2px 8px',
                   }}
                 >
                   {r.status}
                 </span>
               </td>
-              <td style={{ padding: '10px 8px' }}>
-                {new Date(r.createdAt).toLocaleString()}
-              </td>
+              <td>{new Date(r.createdAt).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
