@@ -20,35 +20,20 @@ export function ClientSearch({ onSelect, placeholder }: ClientSearchProps) {
   )
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="relative">
       <input
-        className="button button--secondary"
-        style={{ width: '100%' }}
+        className="button button--secondary w-full"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder ?? 'Buscar comensal...'}
       />
       {query.length >= 2 && (
-        <div
-          style={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            right: 0,
-            background: 'var(--panel)',
-            border: '1px solid var(--border)',
-            borderRadius: 8,
-            zIndex: 10,
-            marginTop: 4,
-            maxHeight: 200,
-            overflowY: 'auto',
-          }}
-        >
+        <div className="search-dropdown">
           {isLoading && (
-            <p style={{ padding: 12, color: 'var(--text-muted)' }}>Buscando...</p>
+            <p className="text-muted" style={{ padding: 12 }}>Buscando...</p>
           )}
           {results && results.length === 0 && (
-            <p style={{ padding: 12, color: 'var(--text-muted)' }}>
+            <p className="text-muted" style={{ padding: 12 }}>
               Sin resultados
             </p>
           )}
@@ -56,20 +41,11 @@ export function ClientSearch({ onSelect, placeholder }: ClientSearchProps) {
             <button
               key={client.id}
               type="button"
+              className="search-result-item"
               onClick={() => handleSelect(client)}
-              style={{
-                display: 'block',
-                width: '100%',
-                padding: 10,
-                textAlign: 'left',
-                background: 'transparent',
-                border: 'none',
-                borderBottom: '1px solid var(--border)',
-                cursor: 'pointer',
-              }}
             >
               <strong>{`${client.firstName} ${client.lastName}`}</strong>
-              <small style={{ display: 'block', color: 'var(--text-muted)' }}>
+              <small className="text-muted" style={{ display: 'block' }}>
                 {client.phoneNumber}
               </small>
             </button>

@@ -1,6 +1,6 @@
 import { createRouter, redirect, Route } from '@tanstack/react-router'
 import { rootRoute } from './routes/__root'
-import { AdminLayout } from './pages/AdminLayout'
+import { AdminLayout } from '../shared/layouts/AdminLayout'
 import { ClientsPage } from './pages/ClientsPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { InfrastructurePage } from './pages/InfrastructurePage'
@@ -8,6 +8,7 @@ import { LoginPage } from './pages/LoginPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { ReservationsPage } from './pages/ReservationsPage'
 import { WaitingListPage } from './pages/WaitingListPage'
+import { ADMIN_BASE } from '../shared/config/navigation'
 import { useAuthSessionStore } from '../features/auth/store/authSessionStore'
 
 const indexRoute = new Route({
@@ -28,7 +29,7 @@ const loginRoute = new Route({
 
 const adminRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: '/admin',
+  path: ADMIN_BASE,
   beforeLoad: () => {
     const { isAuthenticated } = useAuthSessionStore.getState()
     if (!isAuthenticated) throw redirect({ to: '/login' })
@@ -44,25 +45,25 @@ const adminDashboardRoute = new Route({
 
 const adminClientsRoute = new Route({
   getParentRoute: () => adminRoute,
-  path: '/clients',
+  path: 'clients',
   component: ClientsPage,
 })
 
 const adminInfrastructureRoute = new Route({
   getParentRoute: () => adminRoute,
-  path: '/infrastructure',
+  path: 'infrastructure',
   component: InfrastructurePage,
 })
 
 const adminReservationsRoute = new Route({
   getParentRoute: () => adminRoute,
-  path: '/reservations',
+  path: 'reservations',
   component: ReservationsPage,
 })
 
 const adminWaitingListRoute = new Route({
   getParentRoute: () => adminRoute,
-  path: '/waiting-list',
+  path: 'waiting-list',
   component: WaitingListPage,
 })
 

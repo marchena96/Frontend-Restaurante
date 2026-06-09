@@ -43,15 +43,7 @@ export function AssignTableModal({ entry, onClose }: AssignTableModalProps) {
 
   return (
     <div
-      style={{
-        background: 'rgba(0,0,0,0.3)',
-        inset: 0,
-        position: 'fixed',
-        zIndex: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      className="modal-overlay"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
@@ -64,12 +56,12 @@ export function AssignTableModal({ entry, onClose }: AssignTableModalProps) {
           <h2>Asignar mesa</h2>
         </div>
 
-        <div style={{ marginBottom: 16 }}>
+        <div className="mb-16">
           <p>
             <strong>{entry.clientName}</strong> &middot; {entry.partySize} pax
           </p>
           {entry.preferredZone && (
-            <small style={{ color: 'var(--text-muted)' }}>
+            <small className="text-muted">
               Prefiere: {entry.preferredZone}
             </small>
           )}
@@ -78,15 +70,8 @@ export function AssignTableModal({ entry, onClose }: AssignTableModalProps) {
         {isLoading && <p className="text-muted">Buscando mesas disponibles...</p>}
 
         {bestMatch && !selectedTableId && (
-          <div
-            style={{
-              background: 'var(--panel-muted)',
-              borderRadius: 8,
-              padding: 12,
-              marginBottom: 16,
-            }}
-          >
-            <small style={{ color: 'var(--text-muted)' }}>
+          <div className="best-match-card">
+            <small className="text-muted">
               Mejor opcion disponible
             </small>
             <p>
@@ -105,40 +90,28 @@ export function AssignTableModal({ entry, onClose }: AssignTableModalProps) {
         )}
 
         {availableTables && availableTables.length > 0 && (
-          <div
-            style={{
-              display: 'grid',
-              gap: 8,
-              gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-              marginBottom: 16,
-            }}
-          >
+          <div className="available-tables-grid">
             {availableTables.map((table) => (
               <button
                 key={table.id}
                 type="button"
                 onClick={() => setSelectedTableId(table.id)}
-                style={{
-                  background:
-                    selectedTableId === table.id
-                      ? 'var(--accent)'
-                      : 'var(--panel-muted)',
-                  border: `2px solid ${selectedTableId === table.id ? 'var(--accent-strong)' : 'var(--border)'}`,
-                  borderRadius: 8,
-                  color: selectedTableId === table.id ? '#fff' : 'var(--text)',
-                  cursor: 'pointer',
-                  padding: 10,
-                  textAlign: 'center',
-                }}
+                className={
+                  selectedTableId === table.id
+                    ? 'table-option-btn table-option-btn--selected'
+                    : 'table-option-btn'
+                }
               >
                 <strong>Mesa {table.tableNumber}</strong>
                 <small
+                  className={
+                    selectedTableId === table.id ? 'fs-13 block' : 'text-muted block fs-13'
+                  }
                   style={{
-                    display: 'block',
                     color:
                       selectedTableId === table.id
                         ? 'rgba(255,255,255,0.7)'
-                        : 'var(--text-muted)',
+                        : undefined,
                   }}
                 >
                   {table.zoneName} &middot; {table.capacity} pax

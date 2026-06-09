@@ -21,30 +21,23 @@ export function ClientsTable({
   }
 
   return (
-    <div className="operations-panel" style={{ overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <div className="operations-panel overflow-x-auto">
+      <table className="table-data">
         <thead>
-          <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--border)' }}>
-            <th style={{ padding: '10px 8px' }}>Nombre</th>
-            <th style={{ padding: '10px 8px' }}>Telefono</th>
-            <th style={{ padding: '10px 8px' }}>Cedula</th>
-            {actions && <th style={{ padding: '10px 8px' }}>Accion</th>}
+          <tr>
+            <th>Nombre</th>
+            <th>Telefono</th>
+            <th>Cedula</th>
+            {actions && <th>Accion</th>}
           </tr>
         </thead>
         <tbody>
           {clients.map((client) => (
-            <tr
-              key={client.id}
-              style={{ borderBottom: '1px solid var(--border)' }}
-            >
-              <td style={{ padding: '10px 8px' }}>
-                <strong>{`${client.firstName} ${client.lastName}`}</strong>
-              </td>
-              <td style={{ padding: '10px 8px' }}>{client.phoneNumber}</td>
-              <td style={{ padding: '10px 8px' }}>{client.idCard}</td>
-              {actions && (
-                <td style={{ padding: '10px 8px' }}>{actions(client)}</td>
-              )}
+            <tr key={client.id}>
+              <td><strong>{`${client.firstName} ${client.lastName}`}</strong></td>
+              <td>{client.phoneNumber}</td>
+              <td>{client.idCard}</td>
+              {actions && <td>{actions(client)}</td>}
             </tr>
           ))}
         </tbody>

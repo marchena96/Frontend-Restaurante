@@ -4,10 +4,10 @@ export function NotFoundPage() {
   const navigate = useNavigate()
 
   return (
-    <div className="main-panel" style={{ placeContent: 'center', textAlign: 'center' }}>
+    <div className="main-panel text-center" style={{ placeContent: 'center' }}>
       <h1 style={{ fontSize: 80, color: 'var(--accent)', margin: 0 }}>404</h1>
       <p style={{ fontSize: 24, margin: '8px 0' }}>Página no encontrada</p>
-      <p style={{ color: 'var(--text-muted)', marginBottom: 24 }}>
+      <p className="text-muted" style={{ marginBottom: 24 }}>
         La página que buscas no existe o ha sido movida.
       </p>
       <div>

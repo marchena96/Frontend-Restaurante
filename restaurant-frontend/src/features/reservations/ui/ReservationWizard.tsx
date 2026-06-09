@@ -1,8 +1,6 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { Button } from '../../../shared/components/Button'
-import { ClientSearch } from '../../clients/ui/ClientSearch'
-import { InteractiveFloorPlan } from '../../infrastructure/ui/InteractiveFloorPlan'
 import { useCreateReservationMutation } from '../hooks/useCreateReservationMutation'
 import type { ReservationCreateInput } from '../types/reservation'
 import type { Client } from '../../clients/types/client'
@@ -10,7 +8,22 @@ import type { RestaurantTable } from '../../infrastructure/types/table'
 
 type Step = 'client' | 'table' | 'details' | 'confirm'
 
-export function ReservationWizard() {
+interface ReservationWizardProps {
+  renderClientSearch: (props: {
+    onSelect: (client: Client) => void
+    placeholder?: string
+  }) => ReactNode
+  renderFloorPlan: (props: {
+    onSelectTable: (table: RestaurantTable) => void
+    selectedTableId: number | null
+    showTitle: boolean
+  }) => ReactNode
+}
+
+export function ReservationWizard({
+  renderClientSearch,
+  renderFloorPlan,
+}: ReservationWizardProps) {
   const [step, setStep] = useState<Step>('client')
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [selectedTable, setSelectedTable] = useState<RestaurantTable | null>(
@@ -48,37 +61,37 @@ export function ReservationWizard() {
 
   return (
     <div className="operations-panel" style={{ maxWidth: 720 }}>
-      <div style={{ marginBottom: 20 }}>
+      <div className="mb-20">
         <div className="section-heading">
           <h2>Nueva reserva</h2>
-          <small style={{ color: 'var(--text-muted)' }}>
+          <small className="text-muted">
             Paso {['client', 'table', 'details', 'confirm'].indexOf(step) + 1} de 4
           </small>
         </div>
       </div>
 
       {step === 'client' && (
-        <div style={{ display: 'grid', gap: 16 }}>
+        <div className="grid">
           <p>
             <strong>Seleccionar comensal</strong>
           </p>
-          <ClientSearch
-            onSelect={handleSelectClient}
-            placeholder="Buscar comensal por nombre o telefono..."
-          />
+          {renderClientSearch({
+            onSelect: handleSelectClient,
+            placeholder: 'Buscar comensal por nombre o telefono...',
+          })}
         </div>
       )}
 
       {step === 'table' && (
-        <div style={{ display: 'grid', gap: 16 }}>
+        <div className="grid">
           <p>
             <strong>Seleccionar mesa</strong>
           </p>
-          <InteractiveFloorPlan
-            onSelectTable={handleSelectTable}
-            selectedTableId={selectedTable?.id ?? null}
-            showTitle={false}
-          />
+          {renderFloorPlan({
+            onSelectTable: handleSelectTable,
+            selectedTableId: selectedTable?.id ?? null,
+            showTitle: false,
+          })}
           <Button variant="secondary" onClick={() => setStep('client')}>
             Volver
           </Button>
@@ -92,19 +105,15 @@ export function ReservationWizard() {
             e.stopPropagation()
             form.handleSubmit()
           }}
-          style={{ display: 'grid', gap: 16 }}
+          className="grid"
         >
           <div>
-            <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-              Comensal
-            </label>
+            <label className="field-label">Comensal</label>
             <p>{`${selectedClient?.firstName} ${selectedClient?.lastName}`}</p>
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-              Mesa
-            </label>
+            <label className="field-label">Mesa</label>
             <p>
               Mesa {selectedTable?.tableNumber} &middot;{' '}
               {selectedTable?.zoneName} &middot; {selectedTable?.capacity} pax
@@ -114,14 +123,9 @@ export function ReservationWizard() {
           <form.Field name="date">
             {(field) => (
               <div>
-                <label
-                  style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}
-                >
-                  Fecha
-                </label>
+                <label className="field-label">Fecha</label>
                 <input
-                  className="button button--secondary"
-                  style={{ width: '100%' }}
+                  className="button button--secondary w-full"
                   type="date"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
@@ -133,14 +137,9 @@ export function ReservationWizard() {
           <form.Field name="reservationTime">
             {(field) => (
               <div>
-                <label
-                  style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}
-                >
-                  Hora
-                </label>
+                <label className="field-label">Hora</label>
                 <input
-                  className="button button--secondary"
-                  style={{ width: '100%' }}
+                  className="button button--secondary w-full"
                   type="time"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
@@ -152,14 +151,9 @@ export function ReservationWizard() {
           <form.Field name="guestCount">
             {(field) => (
               <div>
-                <label
-                  style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}
-                >
-                  Cantidad de invitados
-                </label>
+                <label className="field-label">Cantidad de invitados</label>
                 <input
-                  className="button button--secondary"
-                  style={{ width: '100%' }}
+                  className="button button--secondary w-full"
                   type="number"
                   min={1}
                   max={selectedTable?.capacity ?? 20}
@@ -190,11 +184,11 @@ export function ReservationWizard() {
       )}
 
       {step === 'confirm' && (
-        <div style={{ display: 'grid', gap: 16, textAlign: 'center' }}>
+        <div className="grid text-center">
           <p>
             <strong>Reserva creada exitosamente</strong>
           </p>
-          <p style={{ color: 'var(--text-muted)' }}>
+          <p className="text-muted">
             {`${selectedClient?.firstName} ${selectedClient?.lastName}`} &middot; Mesa {selectedTable?.tableNumber}{' '}
             &middot; {form.state.values.date} a las{' '}
             {form.state.values.reservationTime}

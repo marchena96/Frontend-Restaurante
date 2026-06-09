@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { Button } from '../../../shared/components/Button'
-import { ClientSearch } from '../../clients/ui/ClientSearch'
 import { useAddToQueueMutation } from '../hooks/useAddToQueueMutation'
 import type { AddToQueuePayload } from '../api/waitingListApi'
 import type { Client } from '../../clients/types/client'
 
 interface AddToQueueModalProps {
   onClose: () => void
+  renderClientSearch: (props: {
+    onSelect: (client: Client) => void
+    placeholder?: string
+  }) => ReactNode
 }
 
-export function AddToQueueModal({ onClose }: AddToQueueModalProps) {
+export function AddToQueueModal({ onClose, renderClientSearch }: AddToQueueModalProps) {
   const addMutation = useAddToQueueMutation()
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
 
@@ -39,15 +42,7 @@ export function AddToQueueModal({ onClose }: AddToQueueModalProps) {
 
   return (
     <div
-      style={{
-        background: 'rgba(0,0,0,0.3)',
-        inset: 0,
-        position: 'fixed',
-        zIndex: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      className="modal-overlay"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
@@ -65,26 +60,15 @@ export function AddToQueueModal({ onClose }: AddToQueueModalProps) {
             e.stopPropagation()
             form.handleSubmit()
           }}
-          style={{ display: 'grid', gap: 16 }}
+          className="grid"
         >
           <div>
-            <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-              Cliente
-            </label>
+            <label className="field-label">Cliente</label>
             {selectedClient ? (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '8px 12px',
-                  background: 'var(--panel-muted)',
-                  borderRadius: 8,
-                }}
-              >
+              <div className="selected-client-row">
                 <span>
                   <strong>{`${selectedClient.firstName} ${selectedClient.lastName}`}</strong>
-                  <small style={{ display: 'block', color: 'var(--text-muted)' }}>
+                  <small className="text-muted block">
                     {selectedClient.phoneNumber}
                   </small>
                 </span>
@@ -97,22 +81,19 @@ export function AddToQueueModal({ onClose }: AddToQueueModalProps) {
                 </Button>
               </div>
             ) : (
-              <ClientSearch
-                onSelect={(client: Client) => setSelectedClient(client)}
-                placeholder="Buscar cliente por nombre..."
-              />
+              renderClientSearch({
+                onSelect: (client: Client) => setSelectedClient(client),
+                placeholder: 'Buscar cliente por nombre...',
+              })
             )}
           </div>
 
           <form.Field name="partySize">
             {(field) => (
               <div>
-                <label style={{ display: 'block', marginBottom: 4, fontWeight: 600 }}>
-                  Cantidad de personas
-                </label>
+                <label className="field-label">Cantidad de personas</label>
                 <input
-                  className="button button--secondary"
-                  style={{ width: '100%' }}
+                  className="button button--secondary w-full"
                   type="number"
                   min={1}
                   max={20}
