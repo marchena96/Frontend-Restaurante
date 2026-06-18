@@ -8,6 +8,7 @@ import { LoginPage } from './pages/LoginPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { ReservationsPage } from './pages/ReservationsPage'
 import { WaitingListPage } from './pages/WaitingListPage'
+import { TurnsPage } from './pages/TurnsPage'
 import { ADMIN_BASE } from '../shared/config/navigation'
 import { useAuthSessionStore } from '../features/auth/store/authSessionStore'
 
@@ -67,6 +68,12 @@ const adminWaitingListRoute = new Route({
   component: WaitingListPage,
 })
 
+const adminTurnsRoute = new Route({
+  getParentRoute: () => adminRoute,
+  path: 'turns',
+  component: TurnsPage,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
@@ -76,6 +83,7 @@ const routeTree = rootRoute.addChildren([
     adminInfrastructureRoute,
     adminReservationsRoute,
     adminWaitingListRoute,
+    adminTurnsRoute,
   ]),
 ])
 

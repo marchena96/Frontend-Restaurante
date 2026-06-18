@@ -48,12 +48,3 @@ export async function updateReservationStatus(
   await httpClient.put(`/reservations/${id}/status/${statusId}`)
 }
 
-export async function getReservationsByDate(
-  date: string,
-): Promise<readonly ReservationResponse[]> {
-  const { data } = await httpClient.get<readonly ReservationResponse[]>(
-    '/reservations',
-    { params: { date } },
-  )
-  return data
-}
