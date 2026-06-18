@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { queryClient } from './app/queryClient'
 import { router } from './app/router'
 import { useAuthSessionStore } from './features/auth/store/authSessionStore'
+import { ToastContainer } from './shared/ui/ToastContainer'
 import './App.css'
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
+      <ToastContainer />
     </QueryClientProvider>
   )
 }
