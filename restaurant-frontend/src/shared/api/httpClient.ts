@@ -8,6 +8,14 @@ export const httpClient = axios.create({
   timeout: env.VITE_API_TIMEOUT,
 })
 
+httpClient.interceptors.request.use((config) => {
+  const token = useAuthSessionStore.getState().token
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
 httpClient.interceptors.response.use(
   (response) => response,
   (error) => {

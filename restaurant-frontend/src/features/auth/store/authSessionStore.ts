@@ -2,8 +2,11 @@ import { create } from 'zustand'
 import type { AuthUser } from '../types/auth'
 import * as authApi from '../api/authApi'
 
+const TOKEN_KEY = 'auth_token'
+
 interface AuthSessionState {
   user: AuthUser | null
+  token: string | null
   isAuthenticated: boolean
   isLoading: boolean
   isInitialized: boolean
@@ -16,30 +19,45 @@ interface AuthSessionState {
 
 export const useAuthSessionStore = create<AuthSessionState>()((set) => ({
   user: null,
+  token: null,
   isAuthenticated: false,
   isLoading: true,
   isInitialized: false,
 
   login: async (credentials) => {
-    const user = await authApi.login(credentials)
-    set({ user, isAuthenticated: true })
+    const res = await authApi.login(credentials)
+    localStorage.setItem(TOKEN_KEY, res.token)
+    set({ user: res.user, token: res.token, isAuthenticated: true })
   },
 
   logout: async () => {
-    await authApi.logout()
-    set({ user: null, isAuthenticated: false })
+    try {
+      await authApi.logout()
+    } finally {
+      localStorage.removeItem(TOKEN_KEY)
+      set({ user: null, token: null, isAuthenticated: false })
+    }
   },
 
   initialize: async () => {
-    set({ isLoading: true })
+    const savedToken = localStorage.getItem(TOKEN_KEY)
+    if (!savedToken) {
+      set({ isLoading: false, isInitialized: true })
+      return
+    }
+    set({ token: savedToken, isLoading: true })
     const user = await authApi.getMe()
     if (user) {
       set({ user, isAuthenticated: true, isLoading: false, isInitialized: true })
     } else {
-      set({ user: null, isAuthenticated: false, isLoading: false, isInitialized: true })
+      localStorage.removeItem(TOKEN_KEY)
+      set({ user: null, token: null, isAuthenticated: false, isLoading: false, isInitialized: true })
     }
   },
 
   setUser: (user) => set({ user, isAuthenticated: true }),
-  clearSession: () => set({ user: null, isAuthenticated: false }),
+  clearSession: () => {
+    localStorage.removeItem(TOKEN_KEY)
+    set({ user: null, token: null, isAuthenticated: false })
+  },
 }))
