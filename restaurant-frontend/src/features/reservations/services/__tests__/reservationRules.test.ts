@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import {
   validateReservationInput,
   canTransitionTo,
@@ -120,20 +120,12 @@ describe('getDefaultTimeSlot', () => {
   })
 
   it('rounds minutes to next 30', () => {
-    const now = new Date()
-    now.setHours(14, 10, 0, 0)
-
-    const OriginalDate = global.Date
-    global.Date = class extends Date {
-      constructor(...args: ConstructorParameters<typeof Date>) {
-        if (args.length === 0) super(now.getTime())
-        else super(...args)
-      }
-    } as typeof Date
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 5, 18, 14, 10, 0, 0))
 
     const result = getDefaultTimeSlot()
 
-    global.Date = OriginalDate
+    vi.useRealTimers()
     expect(result).toBe('14:30')
   })
 })

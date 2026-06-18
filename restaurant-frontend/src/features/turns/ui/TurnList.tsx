@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTurnsQuery } from '../hooks/useTurnsQuery'
 import { useDeleteTurnMutation } from '../hooks/useDeleteTurnMutation'
 import { Button } from '../../../shared/components/Button'
+import { notifyConfirm } from '../../../shared/utils/toast'
 import { TurnFormModal } from './TurnFormModal'
 import type { TurnDto } from '../types/turn'
 
@@ -22,9 +23,7 @@ export function TurnList() {
   }
 
   const handleDelete = (id: number) => {
-    if (confirm('¿Eliminar este turno?')) {
-      deleteMutation.mutate(id)
-    }
+    notifyConfirm('¿Eliminar este turno?', () => deleteMutation.mutate(id))
   }
 
   if (isLoading) {

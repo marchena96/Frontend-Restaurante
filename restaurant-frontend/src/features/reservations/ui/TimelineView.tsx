@@ -1,11 +1,5 @@
+import { StatusDropdown } from './StatusDropdown'
 import type { ReservationResponse } from '../types/reservation'
-
-const statusLabel: Record<string, string> = {
-  Pendiente: 'Pendiente',
-  Confirmada: 'Confirmada',
-  Cancelada: 'Cancelada',
-  Completada: 'Completada',
-}
 
 interface TimelineViewProps {
   reservations: readonly ReservationResponse[] | undefined
@@ -33,7 +27,11 @@ export function TimelineView({ reservations, isLoading }: TimelineViewProps) {
               &middot; {reservation.guestCount} pax
             </span>
           </div>
-          <small>{statusLabel[reservation.status] ?? reservation.status}</small>
+          <StatusDropdown
+            reservationId={reservation.id}
+            currentStatus={reservation.status}
+            clientName={reservation.clientName}
+          />
         </div>
       ))}
     </div>

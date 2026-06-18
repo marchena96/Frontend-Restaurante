@@ -1,3 +1,4 @@
+import { StatusDropdown } from './StatusDropdown'
 import type { ReservationResponse } from '../types/reservation'
 
 interface HistoryLogProps {
@@ -40,21 +41,11 @@ export function HistoryLog({ reservations, isLoading }: HistoryLogProps) {
               <td>{r.tableNumber} ({r.zoneName})</td>
               <td>{r.guestCount}</td>
               <td>
-                <span
-                  className="status-badge"
-                  style={{
-                    background:
-                      r.status === 'Completada'
-                        ? 'var(--accent)'
-                        : r.status === 'Cancelada'
-                          ? '#6b7280'
-                          : r.status === 'Confirmada'
-                            ? '#3b82f6'
-                            : 'var(--warning)',
-                  }}
-                >
-                  {r.status}
-                </span>
+                <StatusDropdown
+                  reservationId={r.id}
+                  currentStatus={r.status}
+                  clientName={r.clientName}
+                />
               </td>
               <td>{new Date(r.createdAt).toLocaleString()}</td>
             </tr>
