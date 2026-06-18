@@ -14,12 +14,14 @@ export function AssignTableModal({ entry, onClose }: AssignTableModalProps) {
   const today = new Date().toISOString().slice(0, 10)
   const now = new Date()
   const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+  const endHour = now.getHours() + 2
+  const endTime = `${String(endHour).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
   const [selectedTableId, setSelectedTableId] = useState<number | null>(null)
 
   const { data: availableTables, isLoading } = useAvailableTablesQuery(
-    entry.partySize,
     today,
     time,
+    endTime,
   )
 
   const assignMutation = useAssignTableMutation()

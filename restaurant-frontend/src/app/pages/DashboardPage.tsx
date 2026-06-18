@@ -11,24 +11,14 @@ function formatTime(time: string): string {
 }
 
 export function DashboardPage() {
-  const { data, isLoading } = useDashboardQuery()
+  const { data, isLoading, isError } = useDashboardQuery()
   const navigate = useNavigate()
 
-  if (isLoading || !data) {
-    return (
-      <section className="metrics-grid" aria-label="Indicadores del dia">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <article className="metric-card" key={i}>
-            <span>&nbsp;</span>
-            <strong>--</strong>
-            <small>&nbsp;</small>
-          </article>
-        ))}
-      </section>
-    )
+  const { metrics, zones, upcomingBlocks } = data ?? {
+    metrics: { activeReservations: 0, pendingReservations: 0, availableTables: 0, largeTablesAvailable: 0, waitingListCount: 0, averageWaitMinutes: 0, occupancyPercent: 0 },
+    zones: [],
+    upcomingBlocks: [],
   }
-
-  const { metrics, zones, upcomingBlocks } = data
 
   return (
     <>
@@ -47,85 +37,93 @@ export function DashboardPage() {
         </div>
       </header>
 
+      {isError && (
+        <section className="error-banner" role="alert">
+          No se pudieron cargar los indicadores. Reintentando...
+        </section>
+      )}
+
       <section className="metrics-grid" aria-label="Indicadores del dia">
         <article className="metric-card">
           <span>Reservas activas</span>
-          <strong>{metrics.activeReservations}</strong>
-          <small>{metrics.pendingReservations} pendientes de confirmacion</small>
+          <strong>{isLoading ? '--' : metrics.activeReservations}</strong>
+          <small>{isLoading ? '' : `${metrics.pendingReservations} pendientes de confirmacion`}</small>
         </article>
         <article className="metric-card">
           <span>Mesas disponibles</span>
-          <strong>{metrics.availableTables}</strong>
-          <small>{metrics.largeTablesAvailable} listas para grupos grandes</small>
+          <strong>{isLoading ? '--' : metrics.availableTables}</strong>
+          <small>{isLoading ? '' : `${metrics.largeTablesAvailable} listas para grupos grandes`}</small>
         </article>
         <article className="metric-card">
           <span>Lista de espera</span>
-          <strong>{metrics.waitingListCount}</strong>
-          <small>{metrics.averageWaitMinutes} min promedio de espera</small>
+          <strong>{isLoading ? '--' : metrics.waitingListCount}</strong>
+          <small>{isLoading ? '' : `${metrics.averageWaitMinutes} min promedio de espera`}</small>
         </article>
         <article className="metric-card">
           <span>Ocupacion</span>
-          <strong>{metrics.occupancyPercent}%</strong>
+          <strong>{isLoading ? '--' : `${metrics.occupancyPercent}%`}</strong>
           <small>Basado en estado actual de mesas</small>
         </article>
       </section>
 
-      <section className="workspace-grid">
-        <article className="operations-panel">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Salon</p>
-              <h2>Estado de zonas</h2>
+      {!isLoading && (
+        <section className="workspace-grid">
+          <article className="operations-panel">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Salon</p>
+                <h2>Estado de zonas</h2>
+              </div>
+              <Button variant="ghost" onClick={() => navigate({ to: '/admin/infrastructure' })}>
+                Ver plano
+              </Button>
             </div>
-            <Button variant="ghost" onClick={() => navigate({ to: '/admin/infrastructure' })}>
-              Ver plano
-            </Button>
-          </div>
 
-          <div className="zone-list">
-            {zones.map((zone) => (
-              <div className="zone-row" key={zone.id}>
-                <div>
-                  <strong>{zone.name}</strong>
-                  <span>{zone.tableCount} mesas</span>
+            <div className="zone-list">
+              {zones.map((zone) => (
+                <div className="zone-row" key={zone.id}>
+                  <div>
+                    <strong>{zone.name}</strong>
+                    <span>{zone.tableCount} mesas</span>
+                  </div>
+                  <progress max="100" value={zone.occupancyPercent} />
+                  <small>{zone.occupancyPercent}%</small>
                 </div>
-                <progress max="100" value={zone.occupancyPercent} />
-                <small>{zone.occupancyPercent}%</small>
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article className="operations-panel">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Reservas</p>
-              <h2>Proximos bloques</h2>
+              ))}
             </div>
-            <Button variant="ghost" onClick={() => navigate({ to: '/admin/reservations' })}>
-              Agenda
-            </Button>
-          </div>
+          </article>
 
-          <div className="timeline">
-            {upcomingBlocks.map((block) => (
-              <div className="timeline-row" key={`${block.time}-${block.clientName}`}>
-                <time>{formatTime(block.time)}</time>
-                <div>
-                  <strong>{block.clientName}</strong>
-                  <span>Mesa {block.tableNumber}</span>
+          <article className="operations-panel">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Reservas</p>
+                <h2>Proximos bloques</h2>
+              </div>
+              <Button variant="ghost" onClick={() => navigate({ to: '/admin/reservations' })}>
+                Agenda
+              </Button>
+            </div>
+
+            <div className="timeline">
+              {upcomingBlocks.map((block) => (
+                <div className="timeline-row" key={`${block.time}-${block.clientName}`}>
+                  <time>{formatTime(block.time)}</time>
+                  <div>
+                    <strong>{block.clientName}</strong>
+                    <span>Mesa {block.tableNumber}</span>
+                  </div>
+                  <small>{block.status}</small>
                 </div>
-                <small>{block.status}</small>
-              </div>
-            ))}
-            {upcomingBlocks.length === 0 && (
-              <div className="timeline-row">
-                <span>No hay reservas proximas</span>
-              </div>
-            )}
-          </div>
-        </article>
-      </section>
+              ))}
+              {upcomingBlocks.length === 0 && (
+                <div className="timeline-row">
+                  <span>No hay reservas proximas</span>
+                </div>
+              )}
+            </div>
+          </article>
+        </section>
+      )}
     </>
   )
 }

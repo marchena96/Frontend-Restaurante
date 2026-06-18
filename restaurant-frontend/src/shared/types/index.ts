@@ -23,3 +23,4 @@ export type RestaurantModule =
   | 'infrastructure'
   | 'reservations'
   | 'waiting-list'
+  | 'turns'

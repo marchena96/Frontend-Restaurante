@@ -54,13 +54,13 @@ export async function findLockByTableId(
 }
 
 export async function getAvailableTables(
-  guestCount: number,
   date: string,
-  time: string,
+  startTime: string,
+  endTime: string,
 ): Promise<readonly RestaurantTable[]> {
   const { data } = await httpClient.get<readonly RestaurantTable[]>(
     '/tables/available',
-    { params: { guestCount, date, time } },
+    { params: { date, startTime, endTime } },
   )
   return data
 }

@@ -16,7 +16,7 @@ export function InteractiveFloorPlan({
   selectedTableId,
   showTitle = true,
 }: InteractiveFloorPlanProps) {
-  const { data, isLoading } = useLocalLayoutQuery()
+  const { data, isLoading, isError, error } = useLocalLayoutQuery()
   const [selectedZone, setSelectedZone] = useState<string | null>(null)
 
   const grouped = useMemo(
@@ -29,6 +29,14 @@ export function InteractiveFloorPlan({
 
   if (isLoading) {
     return <p className="text-muted">Cargando plano del salon...</p>
+  }
+
+  if (isError) {
+    return (
+      <div className="error-banner">
+        <p>Error al cargar el plano: {error instanceof Error ? error.message : 'Error desconocido'}</p>
+      </div>
+    )
   }
 
   if (!data) {
