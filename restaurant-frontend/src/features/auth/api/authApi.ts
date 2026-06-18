@@ -11,8 +11,13 @@ export interface UserDto {
   role: string
 }
 
-export async function login(credentials: LoginRequestDto): Promise<UserDto> {
-  const { data } = await httpClient.post<UserDto>('/auth/login', credentials)
+export interface AuthResponseDto {
+  user: UserDto
+  token: string
+}
+
+export async function login(credentials: LoginRequestDto): Promise<AuthResponseDto> {
+  const { data } = await httpClient.post<AuthResponseDto>('/auth/login', credentials)
   return data
 }
 
