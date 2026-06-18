@@ -1,11 +1,13 @@
 import { Link, Outlet, useRouterState } from '@tanstack/react-router'
 import { navItems, getActiveModule } from '../config/navigation'
+import { useSidebarMetrics } from '../hooks/useSidebarMetrics'
 
 export function AdminLayout() {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
   const activeModule = getActiveModule(pathname)
+  const metrics = useSidebarMetrics()
 
   return (
     <div className="app-shell">
@@ -27,7 +29,7 @@ export function AdminLayout() {
               to={item.to}
             >
               <span>{item.label}</span>
-              <small>{item.metric}</small>
+              <small>{metrics[item.id]}</small>
             </Link>
           ))}
         </nav>

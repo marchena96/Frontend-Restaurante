@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { env } from '../../config/env'
 import { useAuthSessionStore } from '../../features/auth/store/authSessionStore'
-import { useToastStore } from '../store/toastStore'
+import { notify } from '../utils/toast'
 
 export const httpClient = axios.create({
   baseURL: env.VITE_API_BASE_URL,
@@ -20,7 +20,7 @@ httpClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (!error.response) {
-      useToastStore.getState().addToast('Error de conexión con el servidor', 'error')
+      notify.error('Error de conexión con el servidor')
       return Promise.reject(error)
     }
 
@@ -34,11 +34,11 @@ httpClient.interceptors.response.use(
     }
 
     if (status === 403) {
-      useToastStore.getState().addToast('Acceso denegado', 'error')
+      notify.error('Acceso denegado')
     }
 
     if (status >= 500) {
-      useToastStore.getState().addToast('Error del servidor. Intente nuevamente.', 'error')
+      notify.error('Error del servidor. Intente nuevamente.')
     }
 
     return Promise.reject(error)

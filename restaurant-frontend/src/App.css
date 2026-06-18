@@ -1,35 +1,3 @@
-.toast-container {
-  bottom: 24px;
-  display: grid;
-  gap: 8px;
-  position: fixed;
-  right: 24px;
-  z-index: 1000;
-}
-
-.toast {
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  color: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  max-width: 360px;
-  padding: 12px 20px;
-}
-
-.toast--error {
-  background: #d32f2f;
-}
-
-.toast--success {
-  background: var(--accent);
-}
-
-.toast--info {
-  background: #1976d2;
-}
-
 .app-loading {
   align-items: center;
   display: flex;
@@ -206,10 +174,10 @@
 
 .metric-card span,
 .metric-card small,
-.zone-row span,
-.timeline-row span,
-.timeline-row small,
-.zone-row small {
+.zone-row > div > span,
+.zone-row > div > small,
+.timeline-row > div > span,
+.timeline-row > div > small {
   color: var(--text-muted);
 }
 
@@ -259,10 +227,10 @@
   grid-template-columns: 1fr minmax(120px, 220px) 44px;
 }
 
-.zone-row strong,
-.zone-row span,
-.timeline-row strong,
-.timeline-row span {
+.zone-row > div > strong,
+.zone-row > div > span,
+.timeline-row > div > strong,
+.timeline-row > div > span {
   display: block;
 }
 
@@ -289,7 +257,7 @@ progress::-moz-progress-bar {
 }
 
 .timeline-row {
-  grid-template-columns: 86px 1fr 86px;
+  grid-template-columns: 86px 1fr auto;
 }
 
 .timeline-row time {
@@ -502,13 +470,6 @@ progress::-moz-progress-bar {
   background: var(--accent);
   border-color: var(--accent-strong);
   color: #fff;
-}
-
-.status-badge {
-  border-radius: 999px;
-  color: #fff;
-  font-size: 11px;
-  padding: 2px 8px;
 }
 
 .table-data {
