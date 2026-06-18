@@ -1,3 +1,44 @@
+.toast-container {
+  bottom: 24px;
+  display: grid;
+  gap: 8px;
+  position: fixed;
+  right: 24px;
+  z-index: 1000;
+}
+
+.toast {
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  max-width: 360px;
+  padding: 12px 20px;
+}
+
+.toast--error {
+  background: #d32f2f;
+}
+
+.toast--success {
+  background: var(--accent);
+}
+
+.toast--info {
+  background: #1976d2;
+}
+
+.app-loading {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  min-height: 100vh;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
