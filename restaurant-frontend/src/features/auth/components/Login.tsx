@@ -18,7 +18,7 @@ export function Login() {
       await login({ username, password })
       navigate({ to: '/admin' })
     } catch {
-      setError('Credenciales inválidas. Intente nuevamente.')
+      setError('Credenciales invalidas. Intente nuevamente.')
     } finally {
       setSubmitting(false)
     }
@@ -27,13 +27,45 @@ export function Login() {
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
-        <h1>Iniciar sesión</h1>
+        <div style={{ textAlign: 'center', marginBottom: '8px' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '56px',
+              height: '56px',
+              background: 'linear-gradient(135deg, var(--gold), var(--gold-strong))',
+              borderRadius: 'var(--radius-md)',
+              fontFamily: 'var(--font-display)',
+              fontWeight: 700,
+              fontSize: '20px',
+              color: 'var(--bg)',
+              marginBottom: '20px',
+              letterSpacing: '0.05em',
+            }}
+          >
+            RE
+          </div>
+        </div>
+        <h1>Bienvenido</h1>
+        <p
+          style={{
+            textAlign: 'center',
+            color: 'var(--text-muted)',
+            fontSize: '14px',
+            marginBottom: '32px',
+          }}
+        >
+          Ingrese sus credenciales para acceder
+        </p>
         {error && <div className="error-message">{error}</div>}
         <div className="form-field">
           <label htmlFor="login-username">Usuario</label>
           <input
             id="login-username"
             type="text"
+            placeholder="Ingrese su usuario"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
@@ -41,10 +73,11 @@ export function Login() {
           />
         </div>
         <div className="form-field">
-          <label htmlFor="login-password">Contraseña</label>
+          <label htmlFor="login-password">Contrasena</label>
           <input
             id="login-password"
             type="password"
+            placeholder="Ingrese su contrasena"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
@@ -52,7 +85,7 @@ export function Login() {
           />
         </div>
         <button type="submit" disabled={submitting}>
-          {submitting ? 'Ingresando...' : 'Ingresar'}
+          {submitting ? 'Ingresando...' : 'Iniciar sesion'}
         </button>
       </form>
     </div>
