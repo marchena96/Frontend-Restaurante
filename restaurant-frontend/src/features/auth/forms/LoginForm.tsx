@@ -35,7 +35,7 @@ export function LoginForm() {
               justifyContent: 'center',
               width: '56px',
               height: '56px',
-              background: 'linear-gradient(135deg, var(--gold), var(--gold-strong))',
+              background: 'linear-gradient(135deg, var(--accent), var(--accent-strong))',
               borderRadius: 'var(--radius-md)',
               fontFamily: 'var(--font-display)',
               fontWeight: 700,

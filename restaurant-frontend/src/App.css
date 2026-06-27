@@ -17,7 +17,7 @@
   content: '';
   width: 40px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
   animation: shimmer 1.5s infinite;
   background-size: 200% 100%;
 }
@@ -52,9 +52,9 @@
   background: linear-gradient(
     180deg,
     transparent 0%,
-    var(--gold-muted) 30%,
-    var(--gold) 50%,
-    var(--gold-muted) 70%,
+    var(--accent-muted) 30%,
+    var(--accent) 50%,
+    var(--accent-muted) 70%,
     transparent 100%
   );
   opacity: 0.4;
@@ -70,7 +70,7 @@
 
 .brand-mark {
   align-items: center;
-  background: linear-gradient(135deg, var(--gold), var(--gold-strong));
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   border-radius: var(--radius-sm);
   color: var(--bg);
   display: inline-flex;
@@ -133,13 +133,13 @@
   transform: translateY(-50%);
   width: 3px;
   height: 0;
-  background: var(--gold);
+  background: var(--accent);
   border-radius: 0 2px 2px 0;
   transition: height var(--transition-fast);
 }
 
 .nav-item:hover {
-  background: var(--gold-glow);
+  background: var(--accent-glow);
   color: var(--cream);
 }
 
@@ -148,8 +148,8 @@
 }
 
 .nav-item[aria-current='page'] {
-  background: var(--gold-muted);
-  color: var(--gold);
+  background: var(--accent-muted);
+  color: var(--accent);
 }
 
 .nav-item[aria-current='page']::before {
@@ -199,7 +199,7 @@
 }
 
 .eyebrow {
-  color: var(--gold);
+  color: var(--accent);
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 600;
@@ -233,7 +233,7 @@
 }
 
 .button:focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -244,13 +244,13 @@
 }
 
 .button--primary {
-  background: linear-gradient(135deg, var(--gold), var(--gold-strong));
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   color: var(--bg);
   font-weight: 600;
 }
 
 .button--primary:hover:not(:disabled) {
-  box-shadow: var(--shadow-gold), 0 2px 8px rgba(201, 169, 110, 0.3);
+  box-shadow: var(--shadow-accent), 0 2px 8px rgba(5, 173, 152, 0.3);
   filter: brightness(1.05);
 }
 
@@ -267,12 +267,12 @@
 
 .button--ghost {
   background: transparent;
-  color: var(--gold);
+  color: var(--accent);
   border-color: transparent;
 }
 
 .button--ghost:hover:not(:disabled) {
-  background: var(--gold-glow);
+  background: var(--accent-glow);
 }
 
 .button--danger {
@@ -318,14 +318,14 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold-muted), transparent);
+  background: linear-gradient(90deg, transparent, var(--accent-muted), transparent);
   opacity: 0;
   transition: opacity var(--transition-base);
 }
 
 .metric-card:hover {
-  border-color: rgba(201, 169, 110, 0.2);
-  box-shadow: var(--shadow-md), var(--shadow-gold);
+  border-color: rgba(5, 173, 152, 0.2);
+  box-shadow: var(--shadow-md), var(--shadow-accent);
   transform: translateY(-1px);
 }
 
@@ -446,12 +446,12 @@ progress::-webkit-progress-bar {
 }
 
 progress::-webkit-progress-value {
-  background: linear-gradient(90deg, var(--gold), var(--gold-strong));
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
   border-radius: 999px;
 }
 
 progress::-moz-progress-bar {
-  background: linear-gradient(90deg, var(--gold), var(--gold-strong));
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
   border-radius: 999px;
 }
 
@@ -461,7 +461,7 @@ progress::-moz-progress-bar {
 }
 
 .timeline-row time {
-  color: var(--gold);
+  color: var(--accent);
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 15px;
@@ -524,7 +524,7 @@ progress::-moz-progress-bar {
   height: 200%;
   background: radial-gradient(
     ellipse at 30% 20%,
-    rgba(201, 169, 110, 0.04) 0%,
+    rgba(5, 173, 152, 0.04) 0%,
     transparent 50%
   );
   pointer-events: none;
@@ -550,7 +550,7 @@ progress::-moz-progress-bar {
   transform: translateX(-50%);
   width: 60px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
 }
 
 .login-form h1 {
@@ -605,13 +605,13 @@ progress::-moz-progress-bar {
 }
 
 .login-form .form-field input:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px var(--gold-glow);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 .login-form button[type='submit'] {
   width: 100%;
-  background: linear-gradient(135deg, var(--gold), var(--gold-strong));
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   border: none;
   border-radius: var(--radius-md);
   color: var(--bg);
@@ -626,7 +626,7 @@ progress::-moz-progress-bar {
 }
 
 .login-form button[type='submit']:hover:not(:disabled) {
-  box-shadow: var(--shadow-gold), 0 4px 16px rgba(201, 169, 110, 0.3);
+  box-shadow: var(--shadow-accent), 0 4px 16px rgba(5, 173, 152, 0.3);
   filter: brightness(1.05);
 }
 
@@ -667,8 +667,8 @@ progress::-moz-progress-bar {
 .form-field input:focus,
 .form-field select:focus,
 .form-field textarea:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px var(--gold-glow);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 /* === Grid Utilities === */
@@ -725,7 +725,7 @@ progress::-moz-progress-bar {
 }
 
 .search-result-item:hover {
-  background: var(--gold-glow);
+  background: var(--accent-glow);
 }
 
 .search-result-item:last-child {
@@ -779,8 +779,8 @@ progress::-moz-progress-bar {
 
 /* === Best Match Card === */
 .best-match-card {
-  background: var(--gold-glow);
-  border: 1px solid rgba(201, 169, 110, 0.2);
+  background: var(--accent-glow);
+  border: 1px solid rgba(5, 173, 152, 0.2);
   border-radius: var(--radius-md);
   margin-bottom: 16px;
   padding: 14px 16px;
@@ -811,9 +811,9 @@ progress::-moz-progress-bar {
 }
 
 .table-option-btn--selected {
-  background: var(--gold-muted);
-  border-color: var(--gold);
-  color: var(--gold);
+  background: var(--accent-muted);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* === Data Table === */
@@ -846,7 +846,7 @@ progress::-moz-progress-bar {
 }
 
 .table-data tbody tr:hover {
-  background: var(--gold-glow);
+  background: var(--accent-glow);
 }
 
 /* === Text Utilities === */
@@ -859,7 +859,7 @@ progress::-moz-progress-bar {
 }
 
 .text-gold {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .text-center {

@@ -5,6 +5,7 @@ import { ClientsPage } from '../features/clients/pages/ClientsPage'
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage'
 import { InfrastructurePage } from '../features/infrastructure/pages/InfrastructurePage'
 import { LoginPage } from '../features/auth/pages/LoginPage'
+import { LandingPage } from '../features/landing/pages/LandingPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { ReservationsPage } from '../features/reservations/pages/ReservationsPage'
 import { WaitingListPage } from '../features/waiting-list/pages/WaitingListPage'
@@ -15,11 +16,7 @@ import { useAuthSessionStore } from '../features/auth/store/authSessionStore'
 const indexRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/',
-  beforeLoad: () => {
-    const { isAuthenticated } = useAuthSessionStore.getState()
-    if (isAuthenticated) throw redirect({ to: '/admin' })
-    throw redirect({ to: '/login' })
-  },
+  component: LandingPage,
 })
 
 const loginRoute = new Route({
