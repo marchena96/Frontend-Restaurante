@@ -1,4 +1,5 @@
-import type { ReservationCreateInput, ReservationStatus } from '../types/reservation'
+import type { ReservationCreateInput } from '../forms/reservationSchema'
+import type { ReservationStatus } from '../types/reservation'
 
 export function validateReservationInput(
   input: ReservationCreateInput,

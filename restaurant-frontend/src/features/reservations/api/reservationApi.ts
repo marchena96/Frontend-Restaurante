@@ -1,9 +1,6 @@
 import { httpClient } from '../../../shared/api/httpClient'
-import type {
-  ReservationCreateInput,
-  ReservationResponse,
-  ReservationStatus,
-} from '../types/reservation'
+import type { ReservationCreateInput } from '../forms/reservationSchema'
+import type { ReservationResponse, ReservationStatus } from '../types/reservation'
 
 const statusToId: Record<ReservationStatus, number> = {
   Pendiente: 2,

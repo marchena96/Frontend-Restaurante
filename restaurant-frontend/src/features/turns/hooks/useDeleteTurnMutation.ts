@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { queryKeys } from '@/shared/lib/queryKeys'
 import { deleteTurn } from '../api/turnsApi'
 
 export function useDeleteTurnMutation() {
@@ -7,7 +8,7 @@ export function useDeleteTurnMutation() {
   return useMutation({
     mutationFn: (id: number) => deleteTurn(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['turns'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.turns.all })
     },
   })
 }

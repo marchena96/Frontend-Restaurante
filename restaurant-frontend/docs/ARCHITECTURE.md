@@ -305,13 +305,65 @@ git commit -m "tipo(scope): descripcion"
 - `tsc --noEmit`: Pasa sin errores.
 - `vite build`: Pasa correctamente (5.40s).
 
-### Etapa 4: Schemas Zod Separados (Pendiente)
+### Etapa 4: Schemas Zod Separados (Completada)
 
-Extraer schemas de validacion de formularios a archivos independientes en `forms/`.
+**Fecha:** 2026-06-26
 
-### Etapa 5: Query Key Factories (Pendiente)
+**Objetivo:** Extraer schemas de validacion de formularios a archivos independientes en `forms/`.
 
-Implementar factories centralizadas para eliminar strings magicos en query keys.
+| Schema | De | A |
+|---|---|---|
+| `clientFormSchema` | `clients/forms/ClientRegisterForm.tsx` (inline) | `clients/forms/clientFormSchema.ts` |
+| `reservationSchema` | `reservations/types/reservation.ts` | `reservations/forms/reservationSchema.ts` |
+
+**Archivos actualizados (5):**
+- `ClientRegisterForm.tsx` - Importa schema desde `./clientFormSchema`
+- `ReservationWizard.tsx` - Importa tipo desde `./reservationSchema`
+- `reservationApi.ts` - Importa tipo desde `../forms/reservationSchema`
+- `reservationRules.ts` - Importa tipo desde `../forms/reservationSchema`
+- `reservationRules.test.ts` - Importa tipo desde `../../forms/reservationSchema`
+
+**Nota:** `envSchema` en `config/env.ts` no se mueve (no es schema de formulario).
+
+**Verificacion:**
+- `tsc --noEmit`: Pasa sin errores.
+- `vite build`: Pasa correctamente (3.54s).
+- `vitest run`: 37 tests pasan (20 reservationRules + 17 queuePrioritizer).
+
+### Etapa 5: Query Key Factories (Completada)
+
+**Fecha:** 2026-06-26
+
+**Objetivo:** Eliminar strings magicos en query keys y corregir el bug de cache desalineado en `useSidebarMetrics`.
+
+**Archivo creado:** `src/shared/lib/queryKeys.ts`
+
+**Estructura del factory:**
+
+```typescript
+export const queryKeys = {
+  clients:     { all, sidebar }
+  dashboard:   { all }
+  infrastructure: { all, layout, tables: { all, available(date, startTime, endTime) } }
+  reservations: { all }
+  turns:       { all, sidebar }
+  waitingList: { all }
+}
+```
+
+**Archivos actualizados (18):**
+
+| Tipo | Archivos |
+|---|---|
+| Queries (8) | `useClientsQuery`, `useTurnsQuery`, `useDashboardQuery`, `useWaitingListQuery`, `useLocalLayoutQuery`, `useAvailableTablesQuery`, `useReservationsQuery`, `useSidebarMetrics` |
+| Mutations (10) | `useCreateTurnMutation`, `useUpdateTurnMutation`, `useDeleteTurnMutation`, `useAddToQueueMutation`, `useRemoveFromQueueMutation`, `useAssignTableMutation`, `useCreateClientMutation`, `useLockTableMutation`, `useCreateReservationMutation`, `useUpdateReservationStatusMutation` |
+
+**Bug corregido:** `useSidebarMetrics` usaba keys desalineadas (`['tables', 'layout']`, `['turns', 'sidebar']`, `['clients', 'sidebar']`) que no coincidían con las keys de las features. Ahora comparte el mismo cache y se invalida correctamente cuando hay mutaciones.
+
+**Verificacion:**
+- `tsc --noEmit`: Pasa sin errores.
+- `vitest run`: 37 tests pasan.
+- Grep de `queryKey: [`: 0 resultados (todos los strings magicos eliminados).
 
 ### Etapa 6: Barrel Exports (Pendiente)
 

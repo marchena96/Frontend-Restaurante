@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { queryKeys } from '@/shared/lib/queryKeys'
 import { addToQueue } from '../api/waitingListApi'
 import type { AddToQueuePayload } from '../api/waitingListApi'
 
@@ -8,7 +9,7 @@ export function useAddToQueueMutation() {
   return useMutation({
     mutationFn: (payload: AddToQueuePayload) => addToQueue(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['waiting-list'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.waitingList.all })
     },
   })
 }

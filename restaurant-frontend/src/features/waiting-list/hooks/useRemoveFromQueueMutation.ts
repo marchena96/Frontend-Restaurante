@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { queryKeys } from '@/shared/lib/queryKeys'
 import { removeFromQueue } from '../api/waitingListApi'
 
 export function useRemoveFromQueueMutation() {
@@ -7,7 +8,7 @@ export function useRemoveFromQueueMutation() {
   return useMutation({
     mutationFn: (id: number) => removeFromQueue(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['waiting-list'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.waitingList.all })
     },
   })
 }

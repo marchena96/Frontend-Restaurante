@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { queryKeys } from '@/shared/lib/queryKeys'
 import { updateReservationStatus } from '../api/reservationApi'
 import type { ReservationStatus } from '../types/reservation'
 
@@ -14,8 +15,8 @@ export function useUpdateReservationStatusMutation() {
       status: ReservationStatus
     }) => updateReservationStatus(id, status),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reservations'] })
-      queryClient.invalidateQueries({ queryKey: ['infrastructure'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.reservations.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
     },
   })
 }

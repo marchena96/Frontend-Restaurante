@@ -1,4 +1,5 @@
 import { useQueries } from '@tanstack/react-query'
+import { queryKeys } from '@/shared/lib/queryKeys'
 import { getDashboard } from '../../features/dashboard/api/dashboardApi'
 import { getLayout } from '../../features/infrastructure/api/infrastructureApi'
 import { getTurns } from '../../features/turns/api/turnsApi'
@@ -17,23 +18,23 @@ export function useSidebarMetrics(): SidebarMetrics {
   const results = useQueries({
     queries: [
       {
-        queryKey: ['dashboard'],
+        queryKey: queryKeys.dashboard.all,
         queryFn: getDashboard,
         refetchInterval: 30_000,
         staleTime: 10_000,
       },
       {
-        queryKey: ['tables', 'layout'],
+        queryKey: queryKeys.infrastructure.layout,
         queryFn: getLayout,
         staleTime: 30_000,
       },
       {
-        queryKey: ['turns', 'sidebar'],
+        queryKey: queryKeys.turns.all,
         queryFn: getTurns,
         staleTime: 30_000,
       },
       {
-        queryKey: ['clients', 'sidebar'],
+        queryKey: queryKeys.clients.all,
         queryFn: getClients,
         staleTime: 30_000,
       },

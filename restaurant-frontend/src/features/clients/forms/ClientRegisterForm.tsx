@@ -1,16 +1,7 @@
 import { useForm } from '@tanstack/react-form'
-import { z } from 'zod'
 import { Button } from '../../../shared/components/Button'
 import type { Client } from '../types/client'
-
-const clientFormSchema = z.object({
-  firstName: z.string().min(1, 'El nombre es obligatorio'),
-  lastName: z.string().min(1, 'El apellido es obligatorio'),
-  phoneNumber: z.string().min(8, 'Telefono invalido'),
-  idCard: z.string().min(1, 'La cedula es obligatoria'),
-})
-
-type ClientFormValues = z.infer<typeof clientFormSchema>
+import { clientFormSchema, type ClientFormValues } from './clientFormSchema'
 
 interface ClientRegisterFormProps {
   initialValues?: Partial<ClientFormValues>
