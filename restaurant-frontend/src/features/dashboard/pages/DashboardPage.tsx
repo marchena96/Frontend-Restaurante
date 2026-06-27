@@ -1,4 +1,4 @@
-import { Button } from '../../../shared/components/Button'
+import { Button } from '@/shared/components/Button'
 import { useDashboardQuery } from '../hooks/useDashboardQuery'
 import { useNavigate } from '@tanstack/react-router'
 

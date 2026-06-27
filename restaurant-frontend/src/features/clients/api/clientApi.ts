@@ -1,4 +1,4 @@
-import { httpClient } from '../../../shared/api/httpClient'
+import { httpClient } from '@/shared/api/httpClient'
 import type { Client } from '../types/client'
 
 export async function getClients(): Promise<readonly Client[]> {

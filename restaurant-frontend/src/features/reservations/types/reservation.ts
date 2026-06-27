@@ -1,4 +1,4 @@
-import type { EntityId, IsoDate, TimeOnly } from '../../../shared/types'
+import type { EntityId, IsoDate, TimeOnly } from '@/shared/types'
 
 export type ReservationStatus =
   | 'Pendiente'

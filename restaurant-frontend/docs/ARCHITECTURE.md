@@ -37,30 +37,33 @@ src/
 │
 ├── features/                       # Modulos de negocio (Vertical Slices)
 │   ├── auth/                       # Autenticacion
+│   │   ├── index.ts                # Barrel export
 │   │   ├── api/                    # Funciones de API (login, logout, getMe)
 │   │   ├── types/                  # Interfaces TypeScript (AuthUser, AuthSession)
 │   │   ├── store/                  # Estado global Zustand (authSessionStore)
 │   │   ├── hooks/                  # Hooks personalizados (useAuthSession)
 │   │   ├── forms/                  # Formularios (LoginForm)
-│   │   ├── pages/                  # LoginPage
-│   │   └── components/             # Componentes visuales (vacio por ahora)
+│   │   └── pages/                  # LoginPage
 │   │
 │   ├── clients/                    # Gestion de comensales
+│   │   ├── index.ts                # Barrel export
 │   │   ├── api/                    # CRUD de clientes
 │   │   ├── types/                  # Interfaces (Client)
 │   │   ├── hooks/                  # useClientsQuery, useCreateClientMutation
 │   │   ├── services/               # Logica pura (filterClientsByQuery)
 │   │   ├── components/             # ClientsTable, ClientSearch
-│   │   ├── forms/                  # ClientRegisterForm
+│   │   ├── forms/                  # ClientRegisterForm, clientFormSchema
 │   │   └── pages/                  # ClientsPage
 │   │
 │   ├── dashboard/                  # Panel de metricas
+│   │   ├── index.ts                # Barrel export
 │   │   ├── api/                    # GET /dashboard
 │   │   ├── types/                  # MetricsDto, ZoneSummaryDto
 │   │   ├── hooks/                  # useDashboardQuery
 │   │   └── pages/                  # DashboardPage
 │   │
 │   ├── infrastructure/             # Mesas, zonas, plano del local
+│   │   ├── index.ts                # Barrel export
 │   │   ├── api/                    # layout, tables, locks, available
 │   │   ├── types/                  # RestaurantTable, TableStatus
 │   │   ├── services/               # groupTablesByZone, getTableStatusCounts
@@ -69,15 +72,17 @@ src/
 │   │   └── pages/                  # InfrastructurePage
 │   │
 │   ├── reservations/               # Reservaciones
+│   │   ├── index.ts                # Barrel export
 │   │   ├── api/                    # CRUD + status update
-│   │   ├── types/                  # Zod schemas + ReservationResponse
+│   │   ├── types/                  # ReservationResponse, ReservationStatus
 │   │   ├── services/               # reservationRules (validacion, transiciones)
 │   │   ├── hooks/                  # useReservationsQuery, useCreateReservationMutation
 │   │   ├── components/             # TimelineView, StatusDropdown, HistoryLog
-│   │   ├── forms/                  # ReservationWizard
+│   │   ├── forms/                  # ReservationWizard, reservationSchema
 │   │   └── pages/                  # ReservationsPage
 │   │
 │   ├── turns/                      # Turnos de operacion
+│   │   ├── index.ts                # Barrel export
 │   │   ├── api/                    # CRUD completo
 │   │   ├── types/                  # TurnDto, TurnFormInput
 │   │   ├── hooks/                  # useTurnsQuery, mutations
@@ -86,6 +91,7 @@ src/
 │   │   └── pages/                  # TurnsPage
 │   │
 │   └── waiting-list/               # Lista de espera
+│       ├── index.ts                # Barrel export
 │       ├── api/                    # get, add, remove, assign
 │       ├── types/                  # WaitingListEntry
 │       ├── services/               # queuePrioritizer (sort, match, summary)
@@ -96,12 +102,17 @@ src/
 │
 ├── shared/                         # Codigo agnostico al negocio
 │   ├── api/                        # Instancia Axios centralizada (httpClient)
-│   ├── components/                 # UI generica (Button, ModulePlaceholder)
-│   ├── config/                     # Navegacion, variables de entorno
+│   │   └── index.ts
+│   ├── components/                 # UI generica (Button)
+│   │   └── index.ts
+│   ├── config/                     # Navegacion
 │   ├── hooks/                      # useSidebarMetrics
 │   ├── layouts/                    # AdminLayout (sidebar + main panel)
+│   ├── lib/                        # queryKeys factory
 │   ├── types/                      # EntityId, PaginatedResponse
+│   │   └── index.ts
 │   └── utils/                      # cn(), toast()
+│       └── index.ts
 │
 ├── config/                         # Validacion de entorno con Zod
 │   └── env.ts
@@ -365,9 +376,39 @@ export const queryKeys = {
 - `vitest run`: 37 tests pasan.
 - Grep de `queryKey: [`: 0 resultados (todos los strings magicos eliminados).
 
-### Etapa 6: Barrel Exports (Pendiente)
+### Etapa 6: Barrel Exports y Migracion a @/ (Completada)
 
-Crear `index.ts` por feature y migrar imports a `@/`.
+**Fecha:** 2026-06-26
+
+**Objetivo:** Crear `index.ts` por feature y migrar todos los imports relativos profundos a alias `@/`.
+
+**Barrels creados (10):**
+
+| Archivo | Contenido |
+|---|---|
+| `shared/components/index.ts` | Exporta `Button` |
+| `shared/utils/index.ts` | Exporta `notify`, `notifyConfirm` |
+| `shared/api/index.ts` | Exporta `httpClient` |
+| `features/auth/index.ts` | Exports: hooks, types, api, store |
+| `features/clients/index.ts` | Exports: hooks, types, api |
+| `features/dashboard/index.ts` | Exports: hooks, types, api |
+| `features/infrastructure/index.ts` | Exports: hooks, types, api |
+| `features/reservations/index.ts` | Exports: hooks, types, api |
+| `features/turns/index.ts` | Exports: hooks, types, api |
+| `features/waiting-list/index.ts` | Exports: hooks, types, api |
+
+**Imports migrados (42 en 24 archivos):**
+
+- `../../` y `../../../` → `@/shared/...` (22 imports)
+- `../../` y `../../../` → `@/features/...` (20 imports)
+- 0 imports profundos restantes
+
+**Directorio eliminado:** `infrastructure/forms/` (vacio).
+
+**Verificacion:**
+- `tsc --noEmit`: Pasa sin errores.
+- `vitest run`: 37 tests pasan.
+- Grep `../../`: 0 resultados.
 
 ### Etapa 7: Documentacion Final (Pendiente)
 

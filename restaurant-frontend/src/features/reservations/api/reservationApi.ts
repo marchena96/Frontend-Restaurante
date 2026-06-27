@@ -1,4 +1,4 @@
-import { httpClient } from '../../../shared/api/httpClient'
+import { httpClient } from '@/shared/api/httpClient'
 import type { ReservationCreateInput } from '../forms/reservationSchema'
 import type { ReservationResponse, ReservationStatus } from '../types/reservation'
 

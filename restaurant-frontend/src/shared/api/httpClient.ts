@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { env } from '../../config/env'
-import { useAuthSessionStore } from '../../features/auth/store/authSessionStore'
+import { env } from '@/config/env'
+import { useAuthSessionStore } from '@/features/auth/store/authSessionStore'
 import { notify } from '../utils/toast'
 
 export const httpClient = axios.create({

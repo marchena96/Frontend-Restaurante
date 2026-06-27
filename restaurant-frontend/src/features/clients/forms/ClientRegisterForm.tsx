@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form'
-import { Button } from '../../../shared/components/Button'
+import { Button } from '@/shared/components/Button'
 import type { Client } from '../types/client'
 import { clientFormSchema, type ClientFormValues } from './clientFormSchema'
 

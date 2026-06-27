@@ -1,4 +1,4 @@
-import type { EntityId } from '../../../shared/types'
+import type { EntityId } from '@/shared/types'
 
 export type WaitingListStatus = 'EnEspera' | 'Asignado' | 'Cancelado'
 

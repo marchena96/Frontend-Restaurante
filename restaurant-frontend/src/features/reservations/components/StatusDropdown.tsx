@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useUpdateReservationStatusMutation } from '../hooks/useUpdateReservationStatusMutation'
 import { canTransitionTo } from '../services/reservationRules'
-import { notifyConfirm } from '../../../shared/utils/toast'
+import { notifyConfirm } from '@/shared/utils/toast'
 import type { ReservationStatus } from '../types/reservation'
 
 interface StatusDropdownProps {

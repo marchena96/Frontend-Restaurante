@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form'
-import { Button } from '../../../shared/components/Button'
+import { Button } from '@/shared/components/Button'
 import { useCreateTurnMutation } from '../hooks/useCreateTurnMutation'
 import { useUpdateTurnMutation } from '../hooks/useUpdateTurnMutation'
 import type { TurnDto, TurnFormInput } from '../types/turn'

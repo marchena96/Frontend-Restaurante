@@ -1,0 +1,6 @@
+export { useLockTableMutation } from './hooks/useLockTableMutation'
+export { useLocalLayoutQuery } from './hooks/useLocalLayoutQuery'
+export { useAvailableTablesQuery } from './hooks/useAvailableTablesQuery'
+export type { TableStatus, RestaurantTable } from './types/table'
+export { getLayout, getTables, lockTable, unlockTable, findLockByTableId, getAvailableTables } from './api/infrastructureApi'
+export type { ZoneSummary, LayoutData } from './api/infrastructureApi'

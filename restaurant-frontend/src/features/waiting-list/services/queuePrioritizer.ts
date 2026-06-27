@@ -1,5 +1,5 @@
 import type { WaitingListEntry } from '../types/waitingListEntry'
-import type { RestaurantTable } from '../../infrastructure/types/table'
+import type { RestaurantTable } from '@/features/infrastructure/types/table'
 
 export function sortByArrival(
   entries: readonly WaitingListEntry[],

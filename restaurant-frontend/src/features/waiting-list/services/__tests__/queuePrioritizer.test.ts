@@ -6,8 +6,8 @@ import {
   findBestTableMatch,
   getQueueSummary,
 } from '../queuePrioritizer'
-import type { WaitingListEntry } from '../../types/waitingListEntry'
-import type { RestaurantTable } from '../../../infrastructure/types/table'
+import type { WaitingListEntry } from '@/features/waiting-list/types/waitingListEntry'
+import type { RestaurantTable } from '@/features/infrastructure/types/table'
 
 afterEach(() => {
   vi.restoreAllMocks()
