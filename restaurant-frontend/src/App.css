@@ -22,6 +22,34 @@
   background-size: 200% 100%;
 }
 
+/* === Skeleton Loaders === */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--panel) 25%,
+    var(--panel-elevated) 50%,
+    var(--panel) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.skeleton-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+
 /* === App Shell === */
 .app-shell {
   display: grid;
@@ -172,6 +200,54 @@
   margin-top: auto;
   padding-top: 16px;
   border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.logout-btn {
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+  padding: 8px 12px;
+  transition: all var(--transition-fast);
+  width: 100%;
+}
+
+.logout-btn:hover {
+  border-color: var(--error);
+  color: var(--error);
+  background: var(--error-muted);
+}
+
+/* === Sidebar Toggle (Mobile) === */
+.sidebar-toggle {
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--cream);
+  cursor: pointer;
+  display: none;
+  justify-content: center;
+  padding: 8px;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 110;
+  width: 40px;
+  height: 40px;
+}
+
+/* === Sidebar Overlay === */
+.sidebar-overlay {
+  display: none;
 }
 
 /* === Main Panel === */
@@ -901,25 +977,47 @@ progress::-moz-progress-bar {
     grid-template-columns: 1fr;
   }
 
+  .sidebar-toggle {
+    display: flex;
+  }
+
   .sidebar {
-    padding: 20px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform var(--transition-base);
+    padding: 28px 16px;
+    flex-direction: column;
+  }
+
+  .sidebar--open {
+    transform: translateX(0);
   }
 
   .sidebar::before {
     display: none;
   }
 
+  .sidebar-overlay {
+    background: rgba(0, 0, 0, 0.6);
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 190;
+    animation: fadeIn var(--transition-fast) ease-out both;
+  }
+
   .sidebar-nav {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     width: 100%;
   }
 
-  .sidebar-footer {
-    display: none;
+  .main-panel {
+    padding-top: 64px;
   }
 
   .metrics-grid,
@@ -941,6 +1039,7 @@ progress::-moz-progress-bar {
 @media (max-width: 560px) {
   .main-panel {
     padding: 20px;
+    padding-top: 64px;
   }
 
   .header-actions {

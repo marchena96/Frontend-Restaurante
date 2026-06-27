@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTurnsQuery } from '../hooks/useTurnsQuery'
 import { useDeleteTurnMutation } from '../hooks/useDeleteTurnMutation'
 import { Button } from '@/shared/components/Button'
+import { SkeletonRow } from '@/shared/components/Skeleton'
 import { notifyConfirm } from '@/shared/utils/toast'
 import { TurnFormModal } from '../forms/TurnFormModal'
 import type { TurnDto } from '../types/turn'
@@ -27,7 +28,21 @@ export function TurnList() {
   }
 
   if (isLoading) {
-    return <p className="text-muted">Cargando turnos...</p>
+    return (
+      <section>
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Operacion de sala</p>
+            <h2>Turnos</h2>
+          </div>
+        </div>
+        <div className="operations-panel">
+          <SkeletonRow />
+          <SkeletonRow />
+          <SkeletonRow />
+        </div>
+      </section>
+    )
   }
 
   if (isError) {

@@ -1,4 +1,5 @@
 import { Button } from '@/shared/components/Button'
+import { SkeletonCard } from '@/shared/components/Skeleton'
 import { useDashboardQuery } from '../hooks/useDashboardQuery'
 import { useNavigate } from '@tanstack/react-router'
 
@@ -71,43 +72,54 @@ export function DashboardPage() {
 
       {isError && (
         <section className="error-banner" role="alert">
-          No se pudieron cargar los indicadores. Reintentando...
+          No se pudieron cargar los indicadores. Intente recargar la pagina.
         </section>
       )}
 
       <section className="metrics-grid" aria-label="Indicadores del dia">
-        <article className="metric-card animate-fade-in-up stagger-1">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span>Reservas activas</span>
-            <MetricIcon type="reservations" />
-          </div>
-          <strong>{isLoading ? '--' : metrics.activeReservations}</strong>
-          <small>{isLoading ? '' : `${metrics.pendingReservations} pendientes de confirmacion`}</small>
-        </article>
-        <article className="metric-card animate-fade-in-up stagger-2">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span>Mesas disponibles</span>
-            <MetricIcon type="tables" />
-          </div>
-          <strong>{isLoading ? '--' : metrics.availableTables}</strong>
-          <small>{isLoading ? '' : `${metrics.largeTablesAvailable} listas para grupos grandes`}</small>
-        </article>
-        <article className="metric-card animate-fade-in-up stagger-3">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span>Lista de espera</span>
-            <MetricIcon type="waiting" />
-          </div>
-          <strong>{isLoading ? '--' : metrics.waitingListCount}</strong>
-          <small>{isLoading ? '' : `${metrics.averageWaitMinutes} min promedio de espera`}</small>
-        </article>
-        <article className="metric-card animate-fade-in-up stagger-4">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span>Ocupacion</span>
-            <MetricIcon type="occupancy" />
-          </div>
-          <strong>{isLoading ? '--' : `${metrics.occupancyPercent}%`}</strong>
-          <small>Basado en estado actual de mesas</small>
-        </article>
+        {isLoading ? (
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
+        ) : (
+          <>
+            <article className="metric-card animate-fade-in-up stagger-1">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span>Reservas activas</span>
+                <MetricIcon type="reservations" />
+              </div>
+              <strong>{metrics.activeReservations}</strong>
+              <small>{`${metrics.pendingReservations} pendientes de confirmacion`}</small>
+            </article>
+            <article className="metric-card animate-fade-in-up stagger-2">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span>Mesas disponibles</span>
+                <MetricIcon type="tables" />
+              </div>
+              <strong>{metrics.availableTables}</strong>
+              <small>{`${metrics.largeTablesAvailable} listas para grupos grandes`}</small>
+            </article>
+            <article className="metric-card animate-fade-in-up stagger-3">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span>Lista de espera</span>
+                <MetricIcon type="waiting" />
+              </div>
+              <strong>{metrics.waitingListCount}</strong>
+              <small>{`${metrics.averageWaitMinutes} min promedio de espera`}</small>
+            </article>
+            <article className="metric-card animate-fade-in-up stagger-4">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span>Ocupacion</span>
+                <MetricIcon type="occupancy" />
+              </div>
+              <strong>{`${metrics.occupancyPercent}%`}</strong>
+              <small>Basado en estado actual de mesas</small>
+            </article>
+          </>
+        )}
       </section>
 
       {!isLoading && (
