@@ -5,7 +5,7 @@ import {
   getTodayDateString,
   getDefaultTimeSlot,
 } from '../reservationRules'
-import type { ReservationCreateInput } from '../../types/reservation'
+import type { ReservationCreateInput } from '../../forms/reservationSchema'
 
 describe('validateReservationInput', () => {
   const validInput: ReservationCreateInput = {

@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { queryKeys } from '@/shared/lib/queryKeys'
 import { lockTable, unlockTable, findLockByTableId } from '../api/infrastructureApi'
 
 export function useLockTableMutation() {
@@ -8,7 +9,7 @@ export function useLockTableMutation() {
     mutationFn: ({ tableId, reason }: { tableId: number; reason: string }) =>
       lockTable(tableId, reason),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['infrastructure'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
     },
   })
 
@@ -19,7 +20,7 @@ export function useLockTableMutation() {
       await unlockTable(lock.id)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['infrastructure'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
     },
   })
 
