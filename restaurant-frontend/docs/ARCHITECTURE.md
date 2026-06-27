@@ -410,6 +410,24 @@ export const queryKeys = {
 - `vitest run`: 37 tests pasan.
 - Grep `../../`: 0 resultados.
 
-### Etapa 7: Documentacion Final (Pendiente)
+### Etapa 7: Documentacion Final (Completada)
 
-Completar guia para nuevos desarrolladores.
+**Fecha:** 2026-06-26
+
+**Documentos creados/actualizados:**
+
+| Archivo | Contenido |
+|---|---|
+| `README.md` | Reestructurado: quick start, stack actualizado, estructura resumida, links a docs |
+| `docs/USE_CASES.md` | 15 casos de uso documentados con actores, flujos, reglas de negocio |
+
+**Contenido de USE_CASES.md:**
+- 3 casos de uso de autenticación (login, logout, mantener sesión)
+- 1 caso de uso de dashboard
+- 3 casos de uso de comensales (listar, registrar, buscar)
+- 4 casos de uso de infraestructura (ver plano, bloquear, desbloquear, disponibilidad)
+- 4 casos de uso de reservaciones (wizard, cambiar estado, timeline, historial)
+- 4 casos de uso de lista de espera (agregar, asignar mesa, eliminar, monitorear)
+- 4 casos de uso de turnos (listar, crear, editar, eliminar)
+- 2 flujos transversales (invalidación de cache, refetch automático)
+- Diagrama de navegación
