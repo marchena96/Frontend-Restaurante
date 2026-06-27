@@ -21,12 +21,16 @@ export function TurnFormModal({ onClose, editingTurn }: TurnFormModalProps) {
       endTime: editingTurn?.endTime ?? '17:00',
     },
     onSubmit: async ({ value }) => {
-      if (isEdit) {
-        await updateMutation.mutateAsync({ id: editingTurn!.id, payload: value })
-      } else {
-        await createMutation.mutateAsync(value)
+      try {
+        if (isEdit) {
+          await updateMutation.mutateAsync({ id: editingTurn!.id, payload: value })
+        } else {
+          await createMutation.mutateAsync(value)
+        }
+        onClose()
+      } catch {
+        // Error handled by mutation onError
       }
-      onClose()
     },
   })
 
