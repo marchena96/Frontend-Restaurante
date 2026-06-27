@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useWaitingListQuery } from '../hooks/useWaitingListQuery'
 import { useRemoveFromQueueMutation } from '../hooks/useRemoveFromQueueMutation'
 import { sortByArrival, getWaitingTimeMinutes, formatWaitingTime, getQueueSummary } from '../services/queuePrioritizer'
-import { AssignTableModal } from './AssignTableModal'
+import { AssignTableModal } from '../forms/AssignTableModal'
 import { Button } from '../../../shared/components/Button'
 import type { WaitingListEntry } from '../types/waitingListEntry'
 

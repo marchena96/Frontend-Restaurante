@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { useReservationsQuery } from '../../features/reservations/hooks/useReservationsQuery'
-import { ReservationWizard } from '../../features/reservations/ui/ReservationWizard'
-import { TimelineView } from '../../features/reservations/ui/TimelineView'
-import { HistoryLog } from '../../features/reservations/ui/HistoryLog'
-import { ClientSearch } from '../../features/clients/ui/ClientSearch'
-import { InteractiveFloorPlan } from '../../features/infrastructure/ui/InteractiveFloorPlan'
-import { Button } from '../../shared/components/Button'
+import { useReservationsQuery } from '../hooks/useReservationsQuery'
+import { ReservationWizard } from '../forms/ReservationWizard'
+import { TimelineView } from '../components/TimelineView'
+import { HistoryLog } from '../components/HistoryLog'
+import { ClientSearch } from '../../clients/components/ClientSearch'
+import { InteractiveFloorPlan } from '../../infrastructure/components/InteractiveFloorPlan'
+import { Button } from '../../../shared/components/Button'
 
 export function ReservationsPage() {
   const [showWizard, setShowWizard] = useState(false)

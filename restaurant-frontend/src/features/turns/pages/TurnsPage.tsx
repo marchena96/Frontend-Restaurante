@@ -1,4 +1,4 @@
-import { TurnList } from '../../features/turns/ui/TurnList'
+import { TurnList } from '../components/TurnList'
 
 export function TurnsPage() {
   return (
