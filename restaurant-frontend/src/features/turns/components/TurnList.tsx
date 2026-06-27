@@ -3,7 +3,7 @@ import { useTurnsQuery } from '../hooks/useTurnsQuery'
 import { useDeleteTurnMutation } from '../hooks/useDeleteTurnMutation'
 import { Button } from '../../../shared/components/Button'
 import { notifyConfirm } from '../../../shared/utils/toast'
-import { TurnFormModal } from './TurnFormModal'
+import { TurnFormModal } from '../forms/TurnFormModal'
 import type { TurnDto } from '../types/turn'
 
 export function TurnList() {

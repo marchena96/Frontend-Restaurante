@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useAuthSessionStore } from '../store/authSessionStore'
 
-export function Login() {
+export function LoginForm() {
   const navigate = useNavigate()
   const login = useAuthSessionStore((s) => s.login)
   const [username, setUsername] = useState('')

@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { useClientsQuery } from '../../features/clients/hooks/useClientsQuery'
-import { useCreateClientMutation } from '../../features/clients/hooks/useCreateClientMutation'
-import { ClientsTable } from '../../features/clients/ui/ClientsTable'
-import { ClientRegisterForm } from '../../features/clients/ui/ClientRegisterForm'
-import { Button } from '../../shared/components/Button'
+import { useClientsQuery } from '../hooks/useClientsQuery'
+import { useCreateClientMutation } from '../hooks/useCreateClientMutation'
+import { ClientsTable } from '../components/ClientsTable'
+import { ClientRegisterForm } from '../forms/ClientRegisterForm'
+import { Button } from '../../../shared/components/Button'
 
 export function ClientsPage() {
   const [showForm, setShowForm] = useState(false)

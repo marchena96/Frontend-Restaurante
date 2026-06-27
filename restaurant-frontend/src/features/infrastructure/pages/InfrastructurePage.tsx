@@ -1,4 +1,4 @@
-import { InteractiveFloorPlan } from '../../features/infrastructure/ui/InteractiveFloorPlan'
+import { InteractiveFloorPlan } from '../components/InteractiveFloorPlan'
 
 export function InfrastructurePage() {
   return (

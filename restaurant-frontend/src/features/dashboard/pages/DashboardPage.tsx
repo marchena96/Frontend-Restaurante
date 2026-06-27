@@ -1,5 +1,5 @@
-import { Button } from '../../shared/components/Button'
-import { useDashboardQuery } from '../../features/dashboard/hooks/useDashboardQuery'
+import { Button } from '../../../shared/components/Button'
+import { useDashboardQuery } from '../hooks/useDashboardQuery'
 import { useNavigate } from '@tanstack/react-router'
 
 function formatTime(time: string): string {
