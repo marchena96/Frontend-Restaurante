@@ -4,6 +4,7 @@ import { useRemoveFromQueueMutation } from '../hooks/useRemoveFromQueueMutation'
 import { sortByArrival, getWaitingTimeMinutes, formatWaitingTime, getQueueSummary } from '../services/queuePrioritizer'
 import { AssignTableModal } from '../forms/AssignTableModal'
 import { Button } from '@/shared/components/Button'
+import { SkeletonCard } from '@/shared/components/Skeleton'
 import type { WaitingListEntry } from '../types/waitingListEntry'
 
 interface LiveWaitingQueueProps {
@@ -11,7 +12,7 @@ interface LiveWaitingQueueProps {
 }
 
 export function LiveWaitingQueue({ onOpenAddModal }: LiveWaitingQueueProps) {
-  const { data: entries, isLoading } = useWaitingListQuery()
+  const { data: entries, isLoading, isError } = useWaitingListQuery()
   const removeMutation = useRemoveFromQueueMutation()
   const [assigningEntry, setAssigningEntry] =
     useState<WaitingListEntry | null>(null)
@@ -26,6 +27,12 @@ export function LiveWaitingQueue({ onOpenAddModal }: LiveWaitingQueueProps) {
 
   return (
     <>
+      {isError && (
+        <section className="error-banner" role="alert">
+          No se pudo cargar la cola de espera. Intente recargar la pagina.
+        </section>
+      )}
+
       <section className="metrics-grid" aria-label="Resumen de cola">
         <article className="metric-card">
           <span>En espera</span>
@@ -58,7 +65,13 @@ export function LiveWaitingQueue({ onOpenAddModal }: LiveWaitingQueueProps) {
           <Button onClick={onOpenAddModal}>Agregar grupo</Button>
         </div>
 
-        {isLoading && <p className="text-muted">Cargando cola de espera...</p>}
+        {isLoading && (
+          <div className="grid-sm">
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </div>
+        )}
 
         {!isLoading && sorted.length === 0 && (
           <p className="text-muted">No hay grupos en espera.</p>

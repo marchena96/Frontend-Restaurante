@@ -1,3 +1,4 @@
+import { SkeletonRow } from '@/shared/components/Skeleton'
 import type { Client } from '../types/client'
 import type { ReactNode } from 'react'
 
@@ -13,7 +14,15 @@ export function ClientsTable({
   actions,
 }: ClientsTableProps) {
   if (isLoading) {
-    return <p className="text-muted">Cargando comensales...</p>
+    return (
+      <div className="operations-panel">
+        <SkeletonRow />
+        <SkeletonRow />
+        <SkeletonRow />
+        <SkeletonRow />
+        <SkeletonRow />
+      </div>
+    )
   }
 
   if (!clients || clients.length === 0) {

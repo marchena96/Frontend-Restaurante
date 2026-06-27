@@ -1,3 +1,4 @@
+import { SkeletonRow } from '@/shared/components/Skeleton'
 import { StatusDropdown } from './StatusDropdown'
 import type { ReservationResponse } from '../types/reservation'
 
@@ -8,7 +9,13 @@ interface TimelineViewProps {
 
 export function TimelineView({ reservations, isLoading }: TimelineViewProps) {
   if (isLoading) {
-    return <p className="text-muted">Cargando reservas...</p>
+    return (
+      <div className="timeline">
+        <SkeletonRow />
+        <SkeletonRow />
+        <SkeletonRow />
+      </div>
+    )
   }
 
   if (!reservations || reservations.length === 0) {

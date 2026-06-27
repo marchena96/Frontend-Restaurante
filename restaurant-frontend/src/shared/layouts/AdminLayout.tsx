@@ -1,6 +1,9 @@
+import { useState, useCallback } from 'react'
 import { Link, Outlet, useRouterState } from '@tanstack/react-router'
 import { navItems, getActiveModule } from '../config/navigation'
 import { useSidebarMetrics } from '../hooks/useSidebarMetrics'
+import { useAuthSessionStore } from '@/features/auth/store/authSessionStore'
+import { useNavigate } from '@tanstack/react-router'
 
 const navIcons: Record<string, string> = {
   dashboard: 'M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z',
@@ -32,15 +35,41 @@ function NavIcon({ moduleId }: { moduleId: string }) {
 }
 
 export function AdminLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
   const activeModule = getActiveModule(pathname)
   const metrics = useSidebarMetrics()
+  const user = useAuthSessionStore((s) => s.user)
+  const logout = useAuthSessionStore((s) => s.logout)
+  const navigate = useNavigate()
+
+  const handleLogout = useCallback(async () => {
+    await logout()
+    navigate({ to: '/login' })
+  }, [logout, navigate])
+
+  const closeSidebar = useCallback(() => setSidebarOpen(false), [])
+
+  const userInitials = user?.username
+    ? user.username.slice(0, 2).toUpperCase()
+    : '??'
 
   return (
     <div className="app-shell">
-      <aside className="sidebar" aria-label="Navegacion principal">
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={closeSidebar}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside
+        className={`sidebar ${sidebarOpen ? 'sidebar--open' : ''}`}
+        aria-label="Navegacion principal"
+      >
         <div className="brand">
           <span className="brand-mark">RE</span>
           <div>
@@ -56,6 +85,7 @@ export function AdminLayout() {
               className={`nav-item animate-fade-in-up stagger-${index + 1}`}
               key={item.id}
               to={item.to}
+              onClick={closeSidebar}
             >
               <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <NavIcon moduleId={item.id} />
@@ -93,17 +123,53 @@ export function AdminLayout() {
                 flexShrink: 0,
               }}
             >
-              AD
+              {userInitials}
             </div>
-            <div>
-              <div style={{ color: 'var(--cream)', fontWeight: 500, fontSize: '13px' }}>Admin</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ color: 'var(--cream)', fontWeight: 500, fontSize: '13px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {user?.username ?? 'Usuario'}
+              </div>
               <div style={{ fontSize: '11px' }}>Sesion activa</div>
             </div>
           </div>
+          <button
+            type="button"
+            className="logout-btn"
+            onClick={handleLogout}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Cerrar sesion
+          </button>
         </div>
       </aside>
 
       <main className="main-panel">
+        <button
+          type="button"
+          className="sidebar-toggle"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label={sidebarOpen ? 'Cerrar menu' : 'Abrir menu'}
+          aria-expanded={sidebarOpen}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            {sidebarOpen ? (
+              <>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </>
+            ) : (
+              <>
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </>
+            )}
+          </svg>
+        </button>
         <Outlet />
       </main>
     </div>

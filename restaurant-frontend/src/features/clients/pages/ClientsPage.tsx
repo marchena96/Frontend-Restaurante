@@ -7,7 +7,7 @@ import { Button } from '@/shared/components/Button'
 
 export function ClientsPage() {
   const [showForm, setShowForm] = useState(false)
-  const { data: clients, isLoading } = useClientsQuery()
+  const { data: clients, isLoading, isError } = useClientsQuery()
   const createMutation = useCreateClientMutation()
 
   return (
@@ -26,6 +26,12 @@ export function ClientsPage() {
           </Button>
         </div>
       </header>
+
+      {isError && (
+        <section className="error-banner" role="alert">
+          No se pudieron cargar los comensales. Intente recargar la pagina.
+        </section>
+      )}
 
       {showForm ? (
         <ClientRegisterForm

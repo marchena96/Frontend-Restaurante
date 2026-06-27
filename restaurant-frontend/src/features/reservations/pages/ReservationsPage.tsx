@@ -10,7 +10,7 @@ import { Button } from '@/shared/components/Button'
 export function ReservationsPage() {
   const [showWizard, setShowWizard] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
-  const { data: reservations, isLoading } = useReservationsQuery()
+  const { data: reservations, isLoading, isError } = useReservationsQuery()
 
   return (
     <>
@@ -31,6 +31,12 @@ export function ReservationsPage() {
           </Button>
         </div>
       </header>
+
+      {isError && (
+        <section className="error-banner" role="alert">
+          No se pudieron cargar las reservas. Intente recargar la pagina.
+        </section>
+      )}
 
       {showWizard && (
         <ReservationWizard
