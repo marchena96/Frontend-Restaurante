@@ -15,15 +15,15 @@
     --panel-muted: #1f1f1f;
     --border: #2a2a2a;
     --border-subtle: #222222;
-    --gold: #c9a96e;
-    --gold-strong: #b8942e;
-    --gold-muted: rgba(201, 169, 110, 0.15);
-    --gold-glow: rgba(201, 169, 110, 0.08);
-    --cream: #faf7f2;
-    --cream-muted: #e8e4de;
-    --text: #faf7f2;
-    --text-muted: #8a8580;
-    --text-dim: #5a5550;
+    --accent: #05AD98;
+    --accent-strong: #07c9a8;
+    --accent-muted: rgba(5, 173, 152, 0.15);
+    --accent-glow: rgba(5, 173, 152, 0.08);
+    --cream: #FFFFFF;
+    --cream-muted: #BBBFBF;
+    --text: #FFFFFF;
+    --text-muted: #878787;
+    --text-dim: #5a5a5a;
     --error: #e74c3c;
     --error-muted: rgba(231, 76, 60, 0.12);
     --warning: #d4a843;
@@ -31,7 +31,7 @@
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
     --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.6);
-    --shadow-gold: 0 0 20px rgba(201, 169, 110, 0.1);
+    --shadow-accent: 0 0 20px rgba(5, 173, 152, 0.1);
     --font-display: 'Cormorant Garamond', 'Georgia', serif;
     --font-body: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
     --radius-sm: 4px;
@@ -85,8 +85,8 @@
   }
 
   ::selection {
-    background: var(--gold-muted);
-    color: var(--gold);
+    background: var(--accent-muted);
+    color: var(--accent);
   }
 
   ::-webkit-scrollbar {
@@ -130,9 +130,9 @@
     100% { background-position: 200% 0; }
   }
 
-  @keyframes pulse-gold {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(201, 169, 110, 0.3); }
-    50% { box-shadow: 0 0 0 6px rgba(201, 169, 110, 0); }
+  @keyframes pulse-accent {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(5, 173, 152, 0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(5, 173, 152, 0); }
   }
 
   .animate-fade-in-up {
