@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Button } from '@/shared/components/Button'
 import { useAvailableTablesQuery } from '@/features/infrastructure/hooks/useAvailableTablesQuery'
 import { useAssignTableMutation } from '../hooks/useAssignTableMutation'
@@ -17,6 +17,20 @@ export function AssignTableModal({ entry, onClose }: AssignTableModalProps) {
   const endHour = now.getHours() + 2
   const endTime = `${String(endHour).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
   const [selectedTableId, setSelectedTableId] = useState<number | null>(null)
+  const headingId = 'assign-table-heading'
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    dialogRef.current?.focus()
+  }, [])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
 
   const { data: availableTables, isLoading } = useAvailableTablesQuery(
     today,
@@ -55,11 +69,16 @@ export function AssignTableModal({ entry, onClose }: AssignTableModalProps) {
       }}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={headingId}
         className="operations-panel"
         style={{ maxWidth: 480, width: '100%' }}
+        tabIndex={-1}
       >
         <div className="section-heading">
-          <h2>Asignar mesa</h2>
+          <h2 id={headingId}>Asignar mesa</h2>
         </div>
 
         <div className="mb-16">

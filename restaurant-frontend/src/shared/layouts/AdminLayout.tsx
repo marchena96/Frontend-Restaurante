@@ -58,6 +58,10 @@ export function AdminLayout() {
 
   return (
     <div className="app-shell">
+      <a href="#main-content" className="skip-link">
+        Saltar al contenido principal
+      </a>
+
       {sidebarOpen && (
         <div
           className="sidebar-overlay"
@@ -147,7 +151,7 @@ export function AdminLayout() {
         </div>
       </aside>
 
-      <main className="main-panel">
+      <main id="main-content" className="main-panel">
         <button
           type="button"
           className="sidebar-toggle"

@@ -12,6 +12,7 @@ export function useCreateTurnMutation() {
     mutationFn: (payload: TurnFormInput) => createTurn(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.turns.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Turno creado exitosamente')
     },
     onError: (error) => {

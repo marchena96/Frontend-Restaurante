@@ -19,6 +19,7 @@ export function useUpdateReservationStatusMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.reservations.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Estado de reserva actualizado')
     },
     onError: (error) => {

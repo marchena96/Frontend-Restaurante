@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react'
+import { useState, useEffect, useRef, type ReactNode } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { Button } from '@/shared/components/Button'
 import { useAddToQueueMutation } from '../hooks/useAddToQueueMutation'
@@ -16,6 +16,20 @@ interface AddToQueueModalProps {
 export function AddToQueueModal({ onClose, renderClientSearch }: AddToQueueModalProps) {
   const addMutation = useAddToQueueMutation()
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
+  const headingId = 'add-to-queue-heading'
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    dialogRef.current?.focus()
+  }, [])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
 
   const form = useForm<{ partySize: number }>({
     defaultValues: {
@@ -52,11 +66,16 @@ export function AddToQueueModal({ onClose, renderClientSearch }: AddToQueueModal
       }}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={headingId}
         className="operations-panel"
         style={{ maxWidth: 420, width: '100%' }}
+        tabIndex={-1}
       >
         <div className="section-heading">
-          <h2>Agregar grupo a la cola</h2>
+          <h2 id={headingId}>Agregar grupo a la cola</h2>
         </div>
         <form
           onSubmit={(e) => {
@@ -67,7 +86,7 @@ export function AddToQueueModal({ onClose, renderClientSearch }: AddToQueueModal
           className="grid"
         >
           <div>
-            <label className="field-label">Cliente</label>
+            <label className="field-label" htmlFor="queue-client">Cliente</label>
             {selectedClient ? (
               <div className="selected-client-row">
                 <span>
@@ -95,8 +114,9 @@ export function AddToQueueModal({ onClose, renderClientSearch }: AddToQueueModal
           <form.Field name="partySize">
             {(field) => (
               <div>
-                <label className="field-label">Cantidad de personas</label>
+                <label className="field-label" htmlFor="queue-party-size">Cantidad de personas</label>
                 <input
+                  id="queue-party-size"
                   className="button button--secondary w-full"
                   type="number"
                   min={1}

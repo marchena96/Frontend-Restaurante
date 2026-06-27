@@ -11,6 +11,7 @@ export function useRemoveFromQueueMutation() {
     mutationFn: (id: number) => removeFromQueue(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.waitingList.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Grupo removido de la cola')
     },
     onError: (error) => {

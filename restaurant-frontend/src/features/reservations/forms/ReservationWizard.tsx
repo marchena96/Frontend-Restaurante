@@ -112,13 +112,13 @@ export function ReservationWizard({
           className="grid"
         >
           <div>
-            <label className="field-label">Comensal</label>
-            <p>{`${selectedClient?.firstName} ${selectedClient?.lastName}`}</p>
+            <label className="field-label" htmlFor="res-client">Comensal</label>
+            <p id="res-client">{`${selectedClient?.firstName} ${selectedClient?.lastName}`}</p>
           </div>
 
           <div>
-            <label className="field-label">Mesa</label>
-            <p>
+            <label className="field-label" htmlFor="res-table">Mesa</label>
+            <p id="res-table">
               Mesa {selectedTable?.tableNumber} &middot;{' '}
               {selectedTable?.zoneName} &middot; {selectedTable?.capacity} pax
             </p>
@@ -127,8 +127,9 @@ export function ReservationWizard({
           <form.Field name="date">
             {(field) => (
               <div>
-                <label className="field-label">Fecha</label>
+                <label className="field-label" htmlFor="res-date">Fecha</label>
                 <input
+                  id="res-date"
                   className="button button--secondary w-full"
                   type="date"
                   value={field.state.value}
@@ -141,8 +142,9 @@ export function ReservationWizard({
           <form.Field name="reservationTime">
             {(field) => (
               <div>
-                <label className="field-label">Hora</label>
+                <label className="field-label" htmlFor="res-time">Hora</label>
                 <input
+                  id="res-time"
                   className="button button--secondary w-full"
                   type="time"
                   value={field.state.value}
@@ -155,8 +157,9 @@ export function ReservationWizard({
           <form.Field name="guestCount">
             {(field) => (
               <div>
-                <label className="field-label">Cantidad de invitados</label>
+                <label className="field-label" htmlFor="res-guests">Cantidad de invitados</label>
                 <input
+                  id="res-guests"
                   className="button button--secondary w-full"
                   type="number"
                   min={1}

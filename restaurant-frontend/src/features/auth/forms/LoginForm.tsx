@@ -59,7 +59,7 @@ export function LoginForm() {
         >
           Ingrese sus credenciales para acceder
         </p>
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="error-message" role="alert">{error}</div>}
         <div className="form-field">
           <label htmlFor="login-username">Usuario</label>
           <input

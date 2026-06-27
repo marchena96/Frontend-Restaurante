@@ -11,6 +11,7 @@ export function useDeleteTurnMutation() {
     mutationFn: (id: number) => deleteTurn(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.turns.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Turno eliminado exitosamente')
     },
     onError: (error) => {

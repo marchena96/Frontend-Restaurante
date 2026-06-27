@@ -14,6 +14,7 @@ export function useCreateReservationMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.reservations.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Reserva creada exitosamente')
     },
     onError: (error) => {
