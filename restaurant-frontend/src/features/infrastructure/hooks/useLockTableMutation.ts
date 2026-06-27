@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/lib/queryKeys'
+import { notify } from '@/shared/utils/toast'
+import { getErrorMessage } from '@/shared/utils/errors'
 import { lockTable, unlockTable, findLockByTableId } from '../api/infrastructureApi'
 
 export function useLockTableMutation() {
@@ -10,6 +12,10 @@ export function useLockTableMutation() {
       lockTable(tableId, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
+      notify.success('Mesa bloqueada exitosamente')
+    },
+    onError: (error) => {
+      notify.error(getErrorMessage(error, 'Error al bloquear mesa'))
     },
   })
 
@@ -21,6 +27,10 @@ export function useLockTableMutation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
+      notify.success('Mesa desbloqueada exitosamente')
+    },
+    onError: (error) => {
+      notify.error(getErrorMessage(error, 'Error al desbloquear mesa'))
     },
   })
 

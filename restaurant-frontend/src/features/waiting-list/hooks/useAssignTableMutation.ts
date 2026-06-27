@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/lib/queryKeys'
+import { notify } from '@/shared/utils/toast'
+import { getErrorMessage } from '@/shared/utils/errors'
 import { assignTable } from '../api/waitingListApi'
 
 export function useAssignTableMutation() {
@@ -16,6 +18,10 @@ export function useAssignTableMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.waitingList.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
+      notify.success('Mesa asignada exitosamente')
+    },
+    onError: (error) => {
+      notify.error(getErrorMessage(error, 'Error al asignar mesa'))
     },
   })
 }

@@ -23,20 +23,24 @@ export function AddToQueueModal({ onClose, renderClientSearch }: AddToQueueModal
     },
     onSubmit: async ({ value }) => {
       if (!selectedClient) return
-      const now = new Date()
-      const today = now.toISOString().slice(0, 10)
-      const startTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
-      const endHour = now.getHours() + 2
-      const endTime = `${String(endHour).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
-      const payload: AddToQueuePayload = {
-        clientId: selectedClient.id,
-        partySize: value.partySize,
-        date: today,
-        startTime,
-        endTime,
+      try {
+        const now = new Date()
+        const today = now.toISOString().slice(0, 10)
+        const startTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+        const endHour = now.getHours() + 2
+        const endTime = `${String(endHour).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+        const payload: AddToQueuePayload = {
+          clientId: selectedClient.id,
+          partySize: value.partySize,
+          date: today,
+          startTime,
+          endTime,
+        }
+        await addMutation.mutateAsync(payload)
+        onClose()
+      } catch {
+        // Error handled by mutation onError
       }
-      await addMutation.mutateAsync(payload)
-      onClose()
     },
   })
 

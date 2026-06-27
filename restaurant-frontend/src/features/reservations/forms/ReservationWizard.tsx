@@ -41,8 +41,12 @@ export function ReservationWizard({
       guestCount: 1,
     },
     onSubmit: async ({ value }) => {
-      await createReservation.mutateAsync(value)
-      setStep('confirm')
+      try {
+        await createReservation.mutateAsync(value)
+        setStep('confirm')
+      } catch {
+        // Error handled by mutation onError
+      }
     },
   })
 

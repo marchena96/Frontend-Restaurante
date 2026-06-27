@@ -36,11 +36,15 @@ export function AssignTableModal({ entry, onClose }: AssignTableModalProps) {
 
   const handleAssign = async () => {
     if (!selectedTableId) return
-    await assignMutation.mutateAsync({
-      entryId: entry.id,
-      tableId: selectedTableId,
-    })
-    onClose()
+    try {
+      await assignMutation.mutateAsync({
+        entryId: entry.id,
+        tableId: selectedTableId,
+      })
+      onClose()
+    } catch {
+      // Error handled by mutation onError
+    }
   }
 
   return (
