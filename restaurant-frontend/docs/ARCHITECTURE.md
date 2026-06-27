@@ -20,6 +20,8 @@ Guia tecnica y estructural del Frontend del Restaurante.
 | Styling | TailwindCSS | 3.x |
 | Utilities | clsx + tailwind-merge | - |
 | Icons | lucide-react | 1.x |
+| Testing | Vitest | 4.x |
+| Linter | ESLint | 10.x |
 
 ---
 
@@ -90,28 +92,32 @@ src/
 │   │   ├── forms/                  # TurnFormModal
 │   │   └── pages/                  # TurnsPage
 │   │
-│   └── waiting-list/               # Lista de espera
+│   ├── waiting-list/               # Lista de espera
+│   │   ├── index.ts                # Barrel export
+│   │   ├── api/                    # get, add, remove, assign
+│   │   ├── types/                  # WaitingListEntry
+│   │   ├── services/               # queuePrioritizer (sort, match, summary)
+│   │   ├── hooks/                  # useWaitingListQuery, mutations
+│   │   ├── components/             # LiveWaitingQueue
+│   │   ├── forms/                  # AddToQueueModal, AssignTableModal
+│   │   └── pages/                  # WaitingListPage
+│   │
+│   └── landing/                    # Pagina publica
 │       ├── index.ts                # Barrel export
-│       ├── api/                    # get, add, remove, assign
-│       ├── types/                  # WaitingListEntry
-│       ├── services/               # queuePrioritizer (sort, match, summary)
-│       ├── hooks/                  # useWaitingListQuery, mutations
-│       ├── components/             # LiveWaitingQueue
-│       ├── forms/                  # AddToQueueModal, AssignTableModal
-│       └── pages/                  # WaitingListPage
+│       └── pages/                  # LandingPage
 │
 ├── shared/                         # Codigo agnostico al negocio
 │   ├── api/                        # Instancia Axios centralizada (httpClient)
 │   │   └── index.ts
-│   ├── components/                 # UI generica (Button)
+│   ├── components/                 # UI generica (Button, Skeleton*)
 │   │   └── index.ts
 │   ├── config/                     # Navegacion
 │   ├── hooks/                      # useSidebarMetrics
-│   ├── layouts/                    # AdminLayout (sidebar + main panel)
+│   ├── layouts/                    # AdminLayout (sidebar responsive + main panel)
 │   ├── lib/                        # queryKeys factory
 │   ├── types/                      # EntityId, PaginatedResponse
 │   │   └── index.ts
-│   └── utils/                      # cn(), toast()
+│   └── utils/                      # cn(), toast(), errors()
 │       └── index.ts
 │
 ├── config/                         # Validacion de entorno con Zod
@@ -119,8 +125,8 @@ src/
 │
 ├── main.tsx                        # Punto de entrada
 ├── App.tsx                         # Root component (QueryClient + Router + Toast)
-├── App.css                         # Estilos globales (963 lineas)
-└── index.css                       # TailwindCSS + CSS custom properties
+├── App.css                         # Estilos globales (~1090 lineas)
+└── index.css                       # TailwindCSS + CSS custom properties + animations
 ```
 
 ---
@@ -231,26 +237,13 @@ refactor(clients): migrate ui/ to components/ and forms/
 refactor(pages): move page components from app/pages to features
 feat(reservations): add reservation wizard with multi-step form
 fix(waiting-list): correct queue sorting by arrival time
-```
-
-### Proceso de Commit Manual
-
-```bash
-# 1. Verificar estado
-git status
-
-# 2. Verificar cambios
-git diff --staged
-
-# 3. Verificar que no hay errores
-npx tsc --noEmit
-npx vite build
-
-# 4. Agregar archivos relacionados
-git add archivo1.ts archivo2.ts
-
-# 5. Commitear con mensaje descriptivo
-git commit -m "tipo(scope): descripcion"
+feat(landing): add public landing page at /
+feat(shared): add skeleton loaders for loading states
+feat(shared): add toast notifications for mutation feedback
+fix(shared): add dashboard cache invalidation to all mutations
+feat(shared): add responsive sidebar with mobile drawer
+feat(shared): add accessibility (ARIA, labels, skip link)
+refactor(shared): extract CSS variables and add prefers-reduced-motion
 ```
 
 ---
@@ -286,15 +279,9 @@ git commit -m "tipo(scope): descripcion"
 | waiting-list | `AddToQueueModal.tsx`, `AssignTableModal.tsx` | `ui/` | `forms/` |
 | auth | `Login.tsx` → `LoginForm.tsx` | `components/` | `forms/` |
 
-**Directorios eliminados:** Todos los `ui/` y `auth/components/`.
-
-**Imports actualizados:** 12 archivos con rutas rotas corregidas.
-
 ### Etapa 3: Migracion de Paginas (Completada)
 
 **Fecha:** 2026-06-26
-
-**Objetivo:** Mover orquestadores de vista desde `app/pages/` hacia `features/<module>/pages/`.
 
 | Pagina | De | A |
 |---|---|---|
@@ -306,128 +293,112 @@ git commit -m "tipo(scope): descripcion"
 | `LoginPage.tsx` | `app/pages/` | `features/auth/pages/` |
 | `DashboardPage.tsx` | `app/pages/` | `features/dashboard/pages/` |
 
-**Nota:** `NotFoundPage.tsx` se mantiene en `app/pages/` por ser transversal a todas las features.
-
-**Imports actualizados:**
-- 7 archivos de paginas migrados con imports relativos simplificados.
-- `router.tsx` actualizado para importar desde las nuevas ubicaciones.
-
-**Verificacion:**
-- `tsc --noEmit`: Pasa sin errores.
-- `vite build`: Pasa correctamente (5.40s).
-
 ### Etapa 4: Schemas Zod Separados (Completada)
 
 **Fecha:** 2026-06-26
 
-**Objetivo:** Extraer schemas de validacion de formularios a archivos independientes en `forms/`.
-
 | Schema | De | A |
 |---|---|---|
-| `clientFormSchema` | `clients/forms/ClientRegisterForm.tsx` (inline) | `clients/forms/clientFormSchema.ts` |
-| `reservationSchema` | `reservations/types/reservation.ts` | `reservations/forms/reservationSchema.ts` |
-
-**Archivos actualizados (5):**
-- `ClientRegisterForm.tsx` - Importa schema desde `./clientFormSchema`
-- `ReservationWizard.tsx` - Importa tipo desde `./reservationSchema`
-- `reservationApi.ts` - Importa tipo desde `../forms/reservationSchema`
-- `reservationRules.ts` - Importa tipo desde `../forms/reservationSchema`
-- `reservationRules.test.ts` - Importa tipo desde `../../forms/reservationSchema`
-
-**Nota:** `envSchema` en `config/env.ts` no se mueve (no es schema de formulario).
-
-**Verificacion:**
-- `tsc --noEmit`: Pasa sin errores.
-- `vite build`: Pasa correctamente (3.54s).
-- `vitest run`: 37 tests pasan (20 reservationRules + 17 queuePrioritizer).
+| `clientFormSchema` | `ClientRegisterForm.tsx` (inline) | `clientFormSchema.ts` |
+| `reservationSchema` | `types/reservation.ts` | `reservationSchema.ts` |
 
 ### Etapa 5: Query Key Factories (Completada)
 
 **Fecha:** 2026-06-26
 
-**Objetivo:** Eliminar strings magicos en query keys y corregir el bug de cache desalineado en `useSidebarMetrics`.
-
-**Archivo creado:** `src/shared/lib/queryKeys.ts`
-
-**Estructura del factory:**
-
-```typescript
-export const queryKeys = {
-  clients:     { all, sidebar }
-  dashboard:   { all }
-  infrastructure: { all, layout, tables: { all, available(date, startTime, endTime) } }
-  reservations: { all }
-  turns:       { all, sidebar }
-  waitingList: { all }
-}
-```
-
-**Archivos actualizados (18):**
-
-| Tipo | Archivos |
-|---|---|
-| Queries (8) | `useClientsQuery`, `useTurnsQuery`, `useDashboardQuery`, `useWaitingListQuery`, `useLocalLayoutQuery`, `useAvailableTablesQuery`, `useReservationsQuery`, `useSidebarMetrics` |
-| Mutations (10) | `useCreateTurnMutation`, `useUpdateTurnMutation`, `useDeleteTurnMutation`, `useAddToQueueMutation`, `useRemoveFromQueueMutation`, `useAssignTableMutation`, `useCreateClientMutation`, `useLockTableMutation`, `useCreateReservationMutation`, `useUpdateReservationStatusMutation` |
-
-**Bug corregido:** `useSidebarMetrics` usaba keys desalineadas (`['tables', 'layout']`, `['turns', 'sidebar']`, `['clients', 'sidebar']`) que no coincidían con las keys de las features. Ahora comparte el mismo cache y se invalida correctamente cuando hay mutaciones.
-
-**Verificacion:**
-- `tsc --noEmit`: Pasa sin errores.
-- `vitest run`: 37 tests pasan.
-- Grep de `queryKey: [`: 0 resultados (todos los strings magicos eliminados).
+**Archivo:** `src/shared/lib/queryKeys.ts`
 
 ### Etapa 6: Barrel Exports y Migracion a @/ (Completada)
 
 **Fecha:** 2026-06-26
 
-**Objetivo:** Crear `index.ts` por feature y migrar todos los imports relativos profundos a alias `@/`.
+**Barrels creados (10):** Por feature y shared.
 
-**Barrels creados (10):**
-
-| Archivo | Contenido |
-|---|---|
-| `shared/components/index.ts` | Exporta `Button` |
-| `shared/utils/index.ts` | Exporta `notify`, `notifyConfirm` |
-| `shared/api/index.ts` | Exporta `httpClient` |
-| `features/auth/index.ts` | Exports: hooks, types, api, store |
-| `features/clients/index.ts` | Exports: hooks, types, api |
-| `features/dashboard/index.ts` | Exports: hooks, types, api |
-| `features/infrastructure/index.ts` | Exports: hooks, types, api |
-| `features/reservations/index.ts` | Exports: hooks, types, api |
-| `features/turns/index.ts` | Exports: hooks, types, api |
-| `features/waiting-list/index.ts` | Exports: hooks, types, api |
-
-**Imports migrados (42 en 24 archivos):**
-
-- `../../` y `../../../` → `@/shared/...` (22 imports)
-- `../../` y `../../../` → `@/features/...` (20 imports)
-- 0 imports profundos restantes
-
-**Directorio eliminado:** `infrastructure/forms/` (vacio).
-
-**Verificacion:**
-- `tsc --noEmit`: Pasa sin errores.
-- `vitest run`: 37 tests pasan.
-- Grep `../../`: 0 resultados.
-
-### Etapa 7: Documentacion Final (Completada)
+### Etapa 7: Landing Page (Completada)
 
 **Fecha:** 2026-06-26
 
-**Documentos creados/actualizados:**
+| Cambio | Archivos | Descripcion |
+|---|---|---|
+| LandingPage | `features/landing/pages/LandingPage.tsx` | Pagina publica con hero, features, CTA |
+| Router | `app/router.tsx` | `/` renderiza LandingPage |
 
-| Archivo | Contenido |
-|---|---|
-| `README.md` | Reestructurado: quick start, stack actualizado, estructura resumida, links a docs |
-| `docs/USE_CASES.md` | 15 casos de uso documentados con actores, flujos, reglas de negocio |
+### Etapa 8: Palette Migration (Completada)
 
-**Contenido de USE_CASES.md:**
-- 3 casos de uso de autenticación (login, logout, mantener sesión)
-- 1 caso de uso de dashboard
-- 3 casos de uso de comensales (listar, registrar, buscar)
-- 4 casos de uso de infraestructura (ver plano, bloquear, desbloquear, disponibilidad)
-- 4 casos de uso de reservaciones (wizard, cambiar estado, timeline, historial)
-- 4 casos de uso de lista de espera (agregar, asignar mesa, eliminar, monitorear)
-- 4 casos de uso de turnos (listar, crear, editar, eliminar)
-- 2 flujos transversales (invalidación de cache, refetch automático)
-- Diagrama de navegación
+**Fecha:** 2026-06-26
+
+| Cambio | Archivos | Descripcion |
+|---|---|---|
+| CSS vars renombradas | `index.css` | `gold*` → `accent*` para paleta generica |
+| Hardcoded colors | `App.css` | 13 rgba hardcodeados migrados a variables |
+| Components | `AdminLayout`, `DashboardPage`, `LoginForm`, `LandingPage` | Inline styles actualizados |
+
+### Etapa 9: Mutation Feedback (Completada)
+
+**Fecha:** 2026-06-26
+
+| Cambio | Archivos | Descripcion |
+|---|---|---|
+| Toast notifications | 10 mutation hooks | `onSuccess` + `notify.success()` en todas las mutaciones |
+| Error utility | `shared/utils/errors.ts` | `getErrorMessage()` para extraer mensajes de Axios |
+| Try/catch | 4 forms | `mutateAsync` envuelto en try/catch |
+
+### Etapa 10: Error States (Completada)
+
+**Fecha:** 2026-06-26
+
+| Cambio | Archivos | Descripcion |
+|---|---|---|
+| Error banners | `ClientsPage`, `ReservationsPage`, `LiveWaitingQueue` | `isError` + error banner con `role="alert"` |
+
+### Etapa 11: Skeleton Loaders (Completada)
+
+**Fecha:** 2026-06-26
+
+| Cambio | Archivos | Descripcion |
+|---|---|---|
+| Skeleton components | `shared/components/Skeleton.tsx` | `Skeleton`, `SkeletonRow`, `SkeletonCard` |
+| Pages actualizadas | 5 pages | Reemplazado "Cargando..." con skeletons |
+| CSS | `App.css` | Shimmer animation + `.skeleton` classes |
+
+### Etapa 12: Sidebar Responsive (Completada)
+
+**Fecha:** 2026-06-26
+
+| Cambio | Archivos | Descripcion |
+|---|---|---|
+| AdminLayout | `shared/layouts/AdminLayout.tsx` | Drawer con `sidebarOpen`, hamburger toggle, logout |
+| CSS | `App.css` | `.sidebar-toggle`, `.sidebar-overlay`, `.sidebar--open`, `.logout-btn` |
+
+### Etapa 13: Cache Invalidation (Completada)
+
+**Fecha:** 2026-06-26
+
+| Cambio | Archivos | Descripcion |
+|---|---|---|
+| Dashboard keys | 10 mutation hooks | Todas invalidan `dashboard.all` ademas de sus keys |
+| refetchOnWindowFocus | `queryClient.ts` | `true` — refresca al volver a la pestana |
+
+### Etapa 14: Accesibilidad (Completada)
+
+**Fecha:** 2026-06-26
+
+| Cambio | Archivos | Descripcion |
+|---|---|---|
+| Modales | 3 modals | `role="dialog"` + `aria-modal` + `aria-labelledby` + Escape |
+| Form labels | 6 forms | `htmlFor`/`id` en todos los inputs |
+| Error alerts | 4 forms + LoginForm | `role="alert"` en mensajes de error |
+| Skip link | `AdminLayout.tsx` | "Saltar al contenido principal" |
+| CSS | `App.css` | `.skip-link` + `.visually-hidden` |
+
+### Etapa 15: CSS Cleanup (Completada)
+
+**Fecha:** 2026-06-26
+
+| Cambio | Archivos | Descripcion |
+|---|---|---|
+| Font size vars | `index.css` | `--font-size-xs` through `--font-size-lg` |
+| Spacing vars | `index.css` | `--spacing-4` through `--spacing-32` |
+| Color vars | `index.css` | `--overlay`, `--accent-border`, `--error-border`, etc. |
+| Reduced motion | `index.css` | `@media (prefers-reduced-motion: reduce)` |
+| Cleanup | `App.css` | 13 rgba hardcodeados extraidos, `.text-gold` removida |

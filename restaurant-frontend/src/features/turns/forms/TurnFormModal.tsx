@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { Button } from '@/shared/components/Button'
 import { useCreateTurnMutation } from '../hooks/useCreateTurnMutation'
@@ -13,6 +14,20 @@ export function TurnFormModal({ onClose, editingTurn }: TurnFormModalProps) {
   const createMutation = useCreateTurnMutation()
   const updateMutation = useUpdateTurnMutation()
   const isEdit = !!editingTurn
+  const headingId = 'turn-form-heading'
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    dialogRef.current?.focus()
+  }, [])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
 
   const form = useForm<TurnFormInput>({
     defaultValues: {
@@ -38,9 +53,17 @@ export function TurnFormModal({ onClose, editingTurn }: TurnFormModalProps) {
 
   return (
     <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
-      <div className="operations-panel" style={{ maxWidth: 420, width: '100%' }}>
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={headingId}
+        className="operations-panel"
+        style={{ maxWidth: 420, width: '100%' }}
+        tabIndex={-1}
+      >
         <div className="section-heading">
-          <h2>{isEdit ? 'Editar turno' : 'Nuevo turno'}</h2>
+          <h2 id={headingId}>{isEdit ? 'Editar turno' : 'Nuevo turno'}</h2>
         </div>
         <form
           onSubmit={(e) => { e.preventDefault(); e.stopPropagation(); form.handleSubmit() }}
@@ -49,8 +72,9 @@ export function TurnFormModal({ onClose, editingTurn }: TurnFormModalProps) {
           <form.Field name="name">
             {(field) => (
               <div>
-                <label className="field-label">Nombre del turno</label>
+                <label className="field-label" htmlFor="turn-name">Nombre del turno</label>
                 <input
+                  id="turn-name"
                   className="button button--secondary w-full"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
@@ -64,8 +88,9 @@ export function TurnFormModal({ onClose, editingTurn }: TurnFormModalProps) {
           <form.Field name="startTime">
             {(field) => (
               <div>
-                <label className="field-label">Hora de inicio</label>
+                <label className="field-label" htmlFor="turn-start">Hora de inicio</label>
                 <input
+                  id="turn-start"
                   type="time"
                   className="button button--secondary w-full"
                   value={field.state.value}
@@ -79,8 +104,9 @@ export function TurnFormModal({ onClose, editingTurn }: TurnFormModalProps) {
           <form.Field name="endTime">
             {(field) => (
               <div>
-                <label className="field-label">Hora de fin</label>
+                <label className="field-label" htmlFor="turn-end">Hora de fin</label>
                 <input
+                  id="turn-end"
                   type="time"
                   className="button button--secondary w-full"
                   value={field.state.value}

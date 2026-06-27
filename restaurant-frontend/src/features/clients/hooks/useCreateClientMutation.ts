@@ -12,6 +12,7 @@ export function useCreateClientMutation() {
     mutationFn: (payload: Omit<Client, 'id'>) => createClient(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.clients.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Comensal registrado exitosamente')
     },
     onError: (error) => {

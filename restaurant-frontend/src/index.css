@@ -41,6 +41,31 @@
     --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 
+    --font-size-xs: 11px;
+    --font-size-sm: 12px;
+    --font-size-base: 13px;
+    --font-size-md: 14px;
+    --font-size-lg: 20px;
+
+    --spacing-4: 4px;
+    --spacing-8: 8px;
+    --spacing-12: 12px;
+    --spacing-16: 16px;
+    --spacing-20: 20px;
+    --spacing-24: 24px;
+    --spacing-28: 28px;
+    --spacing-32: 32px;
+
+    --overlay: rgba(0, 0, 0, 0.7);
+    --overlay-light: rgba(0, 0, 0, 0.6);
+    --accent-border: rgba(5, 173, 152, 0.2);
+    --accent-glow-strong: rgba(5, 173, 152, 0.3);
+    --accent-subtle: rgba(5, 173, 152, 0.04);
+    --error-border: rgba(231, 76, 60, 0.3);
+    --error-border-light: rgba(231, 76, 60, 0.2);
+    --warning-bg: rgba(212, 168, 67, 0.06);
+    --warning-border: rgba(212, 168, 67, 0.15);
+
     color: var(--text);
     background: var(--bg);
     font-family: var(--font-body);
@@ -106,6 +131,17 @@
   ::-webkit-scrollbar-thumb:hover {
     background: var(--text-dim);
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer utilities {
@@ -131,7 +167,7 @@
   }
 
   @keyframes pulse-accent {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(5, 173, 152, 0.3); }
+    0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow-strong); }
     50% { box-shadow: 0 0 0 6px rgba(5, 173, 152, 0); }
   }
 

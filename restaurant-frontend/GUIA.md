@@ -1,86 +1,161 @@
-# Guía: Resolución del Error de Tipo en AdminLayout
+# Guia: AdminLayout — Responsive Sidebar y Accesibilidad
 
-## 1. Problema
+## 1. Estructura Actual
 
-### Error TypeScript
+`AdminLayout.tsx` es el layout principal del panel administrativo. Renderiza un sidebar con navegacion y un panel principal con `<Outlet />`.
 
-```
-Type '({ children }: AdminLayout) => Element'
-is not assignable to type 'RouteComponent | undefined'.
-  Property 'children' is missing in type '{}'
-  but required in type 'AdminLayout'.
-```
+### Componentes
 
-### Causa Raíz
+| Elemento | Descripcion |
+|---|---|
+| Skip link | "Saltar al contenido principal" — aparece con Tab |
+| Sidebar overlay | Fondo oscuro en movil — cierra sidebar al hacer click |
+| Sidebar | Navegacion principal con brand, nav items, footer |
+| Sidebar toggle | Hamburger button — visible solo en movil (≤960px) |
+| Main panel | Contenido de la ruta activa via `<Outlet />` |
 
-`AdminLayout.tsx` definía una interfaz con `children: ReactNode` y el componente esperaba recibir `{ children }`. Sin embargo, el router (`@tanstack/react-router`) renderiza los componentes de ruta **sin** pasar `children` — usa `<Outlet />` para renderizar rutas hijas.
+### Props del Store
 
-El error de TypeScript significa: "el router llama `AdminLayout({})` (objeto vacío), pero la función exige `children` que no viene".
-
-### Archivos Involucrados
-
-| Archivo | Rol |
-|---------|-----|
-| `src/shared/layouts/AdminLayout.tsx` | Layout del panel admin (componente de ruta) |
-| `src/app/router.tsx` | Define `adminRoute` con `component: AdminLayout` |
-| `src/shared/layouts/MainLayout.tsx` | Layout para rutas públicas (wrapper, no afectado) |
+| Store | Campo | Uso |
+|---|---|---|
+| `authSessionStore` | `user` | `{ id, username, role }` — nombre real del usuario |
+| `authSessionStore` | `logout()` | Limpia sesion y redirige a `/login` |
 
 ---
 
-## 2. Diagnóstico
+## 2. Responsive Behavior
 
-1. `router.tsx:36` — `adminRoute` asigna `AdminLayout` como `component`.
-2. `router.tsx:39-67` — rutas hijas (`adminDashboardRoute`, `adminClientsRoute`, etc.) se pasan via `adminRoute.addChildren([...])`.
-3. `AdminLayout.tsx:5-7` — interfaz `AdminLayout` exige `children: ReactNode`.
-4. `AdminLayout.tsx:47` — función recibe `{ children }`.
-5. `AdminLayout.tsx:79` — renderiza `{children}`.
+### Desktop (>960px)
 
-El router espera que `AdminLayout` sea `RouteComponent` (firma `(props: {}) => any`), pero la función tiene firma `({ children }: AdminLayout) => Element` — incompatible porque le falta `children`.
+- Sidebar fijo a la izquierda (260px)
+- Grid layout: `260px minmax(0, 1fr)`
+- Hamburger oculto
 
----
+### Tablet/Movil (≤960px)
 
-## 3. Solución Aplicada
-
-### Cambios en `AdminLayout.tsx`
-
-| Antes | Después |
-|-------|---------|
-| `import type { ReactNode } from 'react'` | Eliminado |
-| `interface AdminLayout { children: ReactNode }` | Eliminado |
-| `import { Link, useRouterState }` | `import { Link, Outlet, useRouterState }` |
-| `to: '/'` | `to: '/admin'` |
-| `to: '/clients'` | `to: '/admin/clients'` |
-| `to: '/infrastructure'` | `to: '/admin/infrastructure'` |
-| `to: '/reservations'` | `to: '/admin/reservations'` |
-| `to: '/waiting-list'` | `to: '/admin/waiting-list'` |
-| `pathname.startsWith('/clients')` | `pathname.startsWith('/admin/clients')` |
-| (similar para infrastructure, reservations, waiting-list) | |
-| `export function AdminLayout({ children }: AdminLayout)` | `export function AdminLayout()` |
-| `<main>{children}</main>` | `<main><Outlet /></main>` |
-
-### Principios
-
-1. **Los route components no reciben `children`** — el router maneja el anidamiento via `<Outlet />`.
-2. **Las rutas admin están bajo `/admin/...`** — los links y `getActiveModule` deben reflejar el path real.
-3. **Sin interfaz de props** — un route component puro no necesita interfaz de props, recibe `{}`.
+- Sidebar como drawer fijo (280px)
+- `transform: translateX(-100%)` por defecto
+- Hamburger fijo arriba-izquierda
+- Click en overlay o nav link cierra el drawer
+- `padding-top: 64px` en main panel para compensar hamburger
 
 ---
 
-## 4. Verificación
+## 3. Accesibilidad
 
-```bash
-npm run build
-# tsc -b   → 0 errors
-# vite build → built in 721ms
+### Skip Link
+
+```tsx
+<a href="#main-content" className="skip-link">
+  Saltar al contenido principal
+</a>
 ```
 
-El build pasa limpio: `tsc -b` (type-check) y `vite build` (bundle) producen cero errores.
+- Aparece al presionar Tab al inicio de la pagina
+- Oculto por defecto, visible con `:focus`
+- Enlaza a `#main-content` en el `<main>`
+
+### Sidebar
+
+```tsx
+<aside
+  className={`sidebar ${sidebarOpen ? 'sidebar--open' : ''}`}
+  aria-label="Navegacion principal"
+>
+```
+
+- `aria-label` descriptivo para screen readers
+- `aria-current="page"` en el nav item activo
+
+### Hamburger
+
+```tsx
+<button
+  type="button"
+  className="sidebar-toggle"
+  onClick={() => setSidebarOpen(!sidebarOpen)}
+  aria-label={sidebarOpen ? 'Cerrar menu' : 'Abrir menu'}
+  aria-expanded={sidebarOpen}
+>
+```
+
+- `aria-label` dinamico segun estado
+- `aria-expanded` para indicar estado del menu
+
+### Logout Button
+
+```tsx
+<button
+  type="button"
+  className="logout-btn"
+  onClick={handleLogout}
+>
+  <svg>...</svg>
+  Cerrar sesion
+</button>
+```
+
+- Icono + texto para claridad
+- Hover a rojo para feedback visual
 
 ---
 
-## 5. Lecciones
+## 4. Comportamiento de Cierre
 
-- No usar `{ children }` en componentes asignados a `component:` de una ruta — usar `<Outlet />`.
-- Los paths de navegación sidebar deben coincidir con la estructura real del router (`/admin/*` no `/*`).
-- Después de cambios estructurales, siempre ejecutar `tsc -b` para verificar tipos, no solo el bundler.
-- Si hay errores fantasmas en VS Code (no en CLI), limpiar `node_modules/.tmp/` y reiniciar TS Server.
+El sidebar se cierra automaticamente cuando:
+
+1. El usuario hace click en un nav link (`onClick={closeSidebar}`)
+2. El usuario hace click en el overlay oscuro
+3. El usuario presiona Escape (via `useEffect` en modales, no en sidebar)
+
+**Nota:** No se cierra al cambiar de ruta via `useEffect` en `pathname` — esto causaria un lint error (`react-hooks/set-state-in-effect`). En su lugar, se usa `onClick={closeSidebar}` en cada nav link.
+
+---
+
+## 5. User Display
+
+```tsx
+const userInitials = user?.username
+  ? user.username.slice(0, 2).toUpperCase()
+  : '??'
+```
+
+- Muestra `username` real del store (no hardcoded)
+- Iniciales generadas del username (primeras 2 letras)
+- Fallback `??` si no hay usuario
+
+---
+
+## 6. Troubleshooting
+
+### Error: "Avoid calling setState() directly within an effect"
+
+**Causa:** Usar `setSidebarOpen(false)` dentro de `useEffect(() => { ... }, [pathname])`.
+
+**Solucion:** Usar `onClick={closeSidebar}` en los nav links en lugar de `useEffect`.
+
+### Sidebar no aparece en movil
+
+**Verificar:**
+1. `sidebar-toggle` tiene `display: flex` en el media query `≤960px`
+2. `sidebar--open` clase se agrega al hacer click en hamburger
+3. `sidebar-overlay` se renderiza cuando `sidebarOpen` es true
+
+### Logout no funciona
+
+**Verificar:**
+1. `authSessionStore.logout()` esta definido en el store
+2. `navigate({ to: '/login' })` se ejecuta despues de logout
+3. El boton tiene `onClick={handleLogout}`
+
+---
+
+## 7. Archivos Relacionados
+
+| Archivo | Contenido |
+|---|---|
+| `shared/layouts/AdminLayout.tsx` | Componente principal |
+| `shared/config/navigation.ts` | Items de navegacion |
+| `shared/hooks/useSidebarMetrics.ts` | Metricas del sidebar |
+| `features/auth/store/authSessionStore.ts` | Store de sesion |
+| `App.css` | Estilos del sidebar responsive |

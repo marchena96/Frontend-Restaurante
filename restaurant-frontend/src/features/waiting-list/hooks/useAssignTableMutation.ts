@@ -18,6 +18,7 @@ export function useAssignTableMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.waitingList.all })
       queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Mesa asignada exitosamente')
     },
     onError: (error) => {

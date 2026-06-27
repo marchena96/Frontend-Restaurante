@@ -12,6 +12,7 @@ export function useAddToQueueMutation() {
     mutationFn: (payload: AddToQueuePayload) => addToQueue(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.waitingList.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Grupo agregado a la cola de espera')
     },
     onError: (error) => {

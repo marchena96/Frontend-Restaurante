@@ -61,13 +61,20 @@ features/<module>/
 
 **7 features:** auth, clients, dashboard, infrastructure, reservations, turns, waiting-list.
 
-**Shared code** (`shared/`): api (httpClient), components (Button), hooks, layouts (AdminLayout), lib (queryKeys), types, utils (cn).
+**Shared code** (`shared/`):
+- `api/` — httpClient (Axios with JWT interceptors)
+- `components/` — Button, Skeleton, SkeletonRow, SkeletonCard
+- `hooks/` — useSidebarMetrics
+- `layouts/` — AdminLayout (responsive sidebar + main panel)
+- `lib/` — queryKeys factory
+- `types/` — EntityId, PaginatedResponse
+- `utils/` — cn(), notify(), notifyConfirm(), getErrorMessage()
 
 ## Routing
 
 **TanStack Router with manual route tree** — NOT file-based. Routes defined in `src/app/router.tsx`.
 
-- `/` → redirects to `/admin` or `/login`
+- `/` → LandingPage (public)
 - `/login` → LoginPage
 - `/admin/*` → AdminLayout (protected, requires auth)
 
@@ -85,12 +92,55 @@ queryClient.invalidateQueries({ queryKey: queryKeys.clients.all })
 queryClient.invalidateQueries({ queryKey: ['clients'] })
 ```
 
+## Cache Invalidation
+
+All mutations invalidate `dashboard.all` in addition to their own keys. This ensures sidebar metrics stay in sync.
+
+| Mutation | Keys invalidated |
+|---|---|
+| Create client | `clients.all` + `dashboard.all` |
+| Create reservation | `reservations.all` + `infrastructure.all` + `dashboard.all` |
+| Update reservation status | `reservations.all` + `infrastructure.all` + `dashboard.all` |
+| Create/update/delete turn | `turns.all` + `dashboard.all` |
+| Add to queue | `waitingList.all` + `dashboard.all` |
+| Assign table | `waitingList.all` + `infrastructure.all` + `dashboard.all` |
+| Remove from queue | `waitingList.all` + `dashboard.all` |
+| Lock/unlock table | `infrastructure.all` + `dashboard.all` |
+
+`refetchOnWindowFocus: true` — data refreshes when user returns to tab.
+
 ## Forms & Validation
 
 - **TanStack Form** for form state management
 - **Zod 4** for validation schemas
 - Schemas live in `features/<module>/forms/` (e.g., `clientFormSchema.ts`, `reservationSchema.ts`)
 - `cn()` utility from `@/shared/utils/cn` for conditional classes (clsx + tailwind-merge)
+
+## Error Handling
+
+- All mutations use `onSuccess`/`onError` callbacks with toast notifications
+- `getErrorMessage()` utility in `shared/utils/errors.ts` extracts messages from Axios errors
+- Forms using `mutateAsync` wrap calls in `try/catch` to prevent UI state advances on error
+- Error banners on pages use `role="alert"` for screen reader announcement
+
+## Accessibility
+
+- **Modals:** `role="dialog"` + `aria-modal="true"` + `aria-labelledby` + Escape to close
+- **Form labels:** Every input has `htmlFor`/`id` pair
+- **Error messages:** `role="alert"` for screen reader announcement
+- **Skip link:** "Saltar al contenido principal" appears on Tab, links to `#main-content`
+- **Reduced motion:** `@media (prefers-reduced-motion: reduce)` disables animations
+- **Sidebar:** `aria-label="Navegacion principal"`, `aria-current="page"` on active nav
+- **Hamburger:** `aria-label` + `aria-expanded` on mobile toggle
+
+## Skeleton Loaders
+
+Three variants in `shared/components/Skeleton.tsx`:
+- `Skeleton` — base shimmer block
+- `SkeletonRow` — text row placeholder
+- `SkeletonCard` — card placeholder
+
+Used in: DashboardPage, ClientsTable, TimelineView, TurnList, LiveWaitingQueue.
 
 ## Testing
 
@@ -103,6 +153,35 @@ queryClient.invalidateQueries({ queryKey: ['clients'] })
 
 - Vite proxy: `/api` → `http://localhost:5052` (development only)
 - Env vars validated with Zod in `src/config/env.ts`: `VITE_API_BASE_URL`, `VITE_API_TIMEOUT`, `VITE_APP_ENV`
+
+## CSS Variables
+
+Design tokens defined in `src/index.css`:
+
+```css
+/* Colors */
+--bg, --bg-subtle, --panel, --panel-elevated, --border, --border-subtle
+--accent, --accent-strong, --accent-muted, --accent-glow
+--text, --text-muted, --text-dim
+--error, --error-muted, --warning, --success
+
+/* Typography */
+--font-display (Cormorant Garamond), --font-body (DM Sans)
+--font-size-xs (11px), --font-size-sm (12px), --font-size-base (13px), --font-size-md (14px), --font-size-lg (20px)
+
+/* Spacing */
+--spacing-4 through --spacing-32
+
+/* Borders & Shadows */
+--radius-sm/md/lg, --shadow-sm/md/lg, --shadow-accent
+
+/* Transitions */
+--transition-fast (150ms), --transition-base (250ms), --transition-slow (400ms)
+
+/* Overlays & Borders */
+--overlay, --overlay-light, --accent-border, --accent-glow-strong, --accent-subtle
+--error-border, --error-border-light, --warning-bg, --warning-border
+```
 
 ## Conventions
 
@@ -123,3 +202,4 @@ From `CONVENTIONS.md`:
 - `NotFoundPage.tsx` lives in `app/pages/`, not a feature — it's transversal
 - Barrel exports (`index.ts`) exist per feature and shared module — use them for cross-feature imports
 - Intra-feature imports use relative paths; cross-feature imports use `@/` aliases
+- `AuthUser` type has `{ id, username, role }` — no firstName/lastName fields

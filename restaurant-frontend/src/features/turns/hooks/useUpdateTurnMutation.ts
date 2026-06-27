@@ -13,6 +13,7 @@ export function useUpdateTurnMutation() {
       updateTurn(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.turns.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Turno actualizado exitosamente')
     },
     onError: (error) => {

@@ -12,6 +12,7 @@ export function useLockTableMutation() {
       lockTable(tableId, reason),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Mesa bloqueada exitosamente')
     },
     onError: (error) => {
@@ -27,6 +28,7 @@ export function useLockTableMutation() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.infrastructure.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.all })
       notify.success('Mesa desbloqueada exitosamente')
     },
     onError: (error) => {

@@ -47,15 +47,16 @@ export function ClientRegisterForm({
       <form.Field name="firstName">
         {(field) => (
           <div>
-            <label className="field-label">Nombre</label>
+            <label className="field-label" htmlFor="client-first-name">Nombre</label>
             <input
+              id="client-first-name"
               className="button button--secondary w-full"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="Ej: Juan"
             />
             {field.state.meta.errors?.length > 0 && (
-              <small className="text-warning">
+              <small className="text-warning" role="alert">
                 {field.state.meta.errors.join(', ')}
               </small>
             )}
@@ -66,15 +67,16 @@ export function ClientRegisterForm({
       <form.Field name="lastName">
         {(field) => (
           <div>
-            <label className="field-label">Apellido</label>
+            <label className="field-label" htmlFor="client-last-name">Apellido</label>
             <input
+              id="client-last-name"
               className="button button--secondary w-full"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="Ej: Perez"
             />
             {field.state.meta.errors?.length > 0 && (
-              <small className="text-warning">
+              <small className="text-warning" role="alert">
                 {field.state.meta.errors.join(', ')}
               </small>
             )}
@@ -85,15 +87,16 @@ export function ClientRegisterForm({
       <form.Field name="phoneNumber">
         {(field) => (
           <div>
-            <label className="field-label">Telefono</label>
+            <label className="field-label" htmlFor="client-phone">Telefono</label>
             <input
+              id="client-phone"
               className="button button--secondary w-full"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="Ej: 8888-5555"
             />
             {field.state.meta.errors?.length > 0 && (
-              <small className="text-warning">
+              <small className="text-warning" role="alert">
                 {field.state.meta.errors.join(', ')}
               </small>
             )}
@@ -104,15 +107,16 @@ export function ClientRegisterForm({
       <form.Field name="idCard">
         {(field) => (
           <div>
-            <label className="field-label">Cedula</label>
+            <label className="field-label" htmlFor="client-id-card">Cedula</label>
             <input
+              id="client-id-card"
               className="button button--secondary w-full"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="Ej: 504580546"
             />
             {field.state.meta.errors?.length > 0 && (
-              <small className="text-warning">
+              <small className="text-warning" role="alert">
                 {field.state.meta.errors.join(', ')}
               </small>
             )}
