@@ -1,4 +1,4 @@
-import { httpClient } from '../../../shared/api/httpClient'
+import { httpClient } from '@/shared/api/httpClient'
 import type { RestaurantTable } from '../types/table'
 
 export interface ZoneSummary {

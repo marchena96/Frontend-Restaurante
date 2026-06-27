@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { LiveWaitingQueue } from '../components/LiveWaitingQueue'
 import { AddToQueueModal } from '../forms/AddToQueueModal'
-import { ClientSearch } from '../../clients/components/ClientSearch'
+import { ClientSearch } from '@/features/clients/components/ClientSearch'
 
 export function WaitingListPage() {
   const [showAddModal, setShowAddModal] = useState(false)

@@ -3,9 +3,9 @@ import { useReservationsQuery } from '../hooks/useReservationsQuery'
 import { ReservationWizard } from '../forms/ReservationWizard'
 import { TimelineView } from '../components/TimelineView'
 import { HistoryLog } from '../components/HistoryLog'
-import { ClientSearch } from '../../clients/components/ClientSearch'
-import { InteractiveFloorPlan } from '../../infrastructure/components/InteractiveFloorPlan'
-import { Button } from '../../../shared/components/Button'
+import { ClientSearch } from '@/features/clients/components/ClientSearch'
+import { InteractiveFloorPlan } from '@/features/infrastructure/components/InteractiveFloorPlan'
+import { Button } from '@/shared/components/Button'
 
 export function ReservationsPage() {
   const [showWizard, setShowWizard] = useState(false)

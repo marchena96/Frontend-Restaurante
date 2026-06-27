@@ -1,10 +1,10 @@
 import { useState, type ReactNode } from 'react'
 import { useForm } from '@tanstack/react-form'
-import { Button } from '../../../shared/components/Button'
+import { Button } from '@/shared/components/Button'
 import { useCreateReservationMutation } from '../hooks/useCreateReservationMutation'
 import type { ReservationCreateInput } from './reservationSchema'
-import type { Client } from '../../clients/types/client'
-import type { RestaurantTable } from '../../infrastructure/types/table'
+import type { Client } from '@/features/clients/types/client'
+import type { RestaurantTable } from '@/features/infrastructure/types/table'
 
 type Step = 'client' | 'table' | 'details' | 'confirm'
 

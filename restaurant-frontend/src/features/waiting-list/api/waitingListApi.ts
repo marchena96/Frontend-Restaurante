@@ -1,4 +1,4 @@
-import { httpClient } from '../../../shared/api/httpClient'
+import { httpClient } from '@/shared/api/httpClient'
 import type { WaitingListEntry, WaitingListStatus } from '../types/waitingListEntry'
 
 export interface AddToQueuePayload {

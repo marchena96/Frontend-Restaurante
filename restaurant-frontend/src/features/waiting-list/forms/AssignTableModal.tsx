@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
-import { Button } from '../../../shared/components/Button'
-import { useAvailableTablesQuery } from '../../infrastructure/hooks/useAvailableTablesQuery'
+import { Button } from '@/shared/components/Button'
+import { useAvailableTablesQuery } from '@/features/infrastructure/hooks/useAvailableTablesQuery'
 import { useAssignTableMutation } from '../hooks/useAssignTableMutation'
 import { findBestTableMatch } from '../services/queuePrioritizer'
 import type { WaitingListEntry } from '../types/waitingListEntry'

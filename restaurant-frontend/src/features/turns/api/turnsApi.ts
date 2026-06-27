@@ -1,4 +1,4 @@
-import { httpClient } from '../../../shared/api/httpClient'
+import { httpClient } from '@/shared/api/httpClient'
 import type { TurnDto, TurnFormInput } from '../types/turn'
 
 export async function getTurns(): Promise<readonly TurnDto[]> {

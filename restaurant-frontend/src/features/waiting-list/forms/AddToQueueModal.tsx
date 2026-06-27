@@ -1,9 +1,9 @@
 import { useState, type ReactNode } from 'react'
 import { useForm } from '@tanstack/react-form'
-import { Button } from '../../../shared/components/Button'
+import { Button } from '@/shared/components/Button'
 import { useAddToQueueMutation } from '../hooks/useAddToQueueMutation'
 import type { AddToQueuePayload } from '../api/waitingListApi'
-import type { Client } from '../../clients/types/client'
+import type { Client } from '@/features/clients/types/client'
 
 interface AddToQueueModalProps {
   onClose: () => void

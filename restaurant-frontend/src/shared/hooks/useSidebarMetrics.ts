@@ -1,9 +1,9 @@
 import { useQueries } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/lib/queryKeys'
-import { getDashboard } from '../../features/dashboard/api/dashboardApi'
-import { getLayout } from '../../features/infrastructure/api/infrastructureApi'
-import { getTurns } from '../../features/turns/api/turnsApi'
-import { getClients } from '../../features/clients/api/clientApi'
+import { getDashboard } from '@/features/dashboard/api/dashboardApi'
+import { getLayout } from '@/features/infrastructure/api/infrastructureApi'
+import { getTurns } from '@/features/turns/api/turnsApi'
+import { getClients } from '@/features/clients/api/clientApi'
 
 export interface SidebarMetrics {
   dashboard: string
